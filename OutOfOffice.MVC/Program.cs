@@ -1,7 +1,18 @@
+using OutOfOffice.Infrastructure.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddMvc()
+    .AddViewOptions(options =>
+    {
+        options.HtmlHelperOptions.FormInputRenderMode = Microsoft.AspNetCore.Mvc.Rendering.FormInputRenderMode.AlwaysUseCurrentCulture;
+    });
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Infrastructure project - services configuration by extension method
+builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
 
@@ -23,5 +34,7 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapRazorPages();
 
 app.Run();
