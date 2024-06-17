@@ -1,0 +1,27 @@
+﻿<div class="container col-xl-10 col-xxl-10 px-4 py-5">
+    <div class="row align-items-center">
+        <div class="col-md-10 mx-auto col-lg-6 p-4 rounded-3 form-column">
+            <form id="incomeForm" asp-action="Create" method="post">
+                <h2 class="form-header">Add income</h2>
+                <hr />
+                <div class="form-floating mb-3">
+                    <select asp-for="CategoryId" asp-items="@(new SelectList(Model.UserCategoryDtos,
+                        nameof(IncomeCategoryAssignedToUserDto.Id),
+                        nameof(IncomeCategoryAssignedToUserDto.Name)))"
+                            class="form-select form-select-md">
+                        <option value="0">Please select one</option>
+                    </select>
+                    <label asp-for="CategoryId">Category</label>
+                    <span asp-validation-for="CategoryId" class="text-danger" id="categoryIdSpan"></span>
+                </div>
+                <button id="incomeSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Add</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

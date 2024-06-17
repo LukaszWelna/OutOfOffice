@@ -18,5 +18,65 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    background-color: #f8f8f8;
+    margin-bottom: 60px;
+}
+
+.form-header {
+    text-align: center;
+}
+
+.form-column {
+    background-color: white;
+}
+
+.remember-me, .activate-limit {
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.register-button {
+    background-color: rgb(46, 192, 46);
+    border-color: rgb(46, 192, 46);
+}
+
+    .register-button:hover {
+        background-color: rgb(61, 177, 61) !important;
+        border-color: rgb(46, 192, 46) !important;
+    }
+
+    .register-button:focus,
+    .register-button:active {
+        background-color: rgb(46, 148, 46) !important;
+        border-color: rgb(46, 192, 46) !important;
+    }
+
+.btn-primary, .btn-danger {
+    box-shadow: none !important;
+}
+
+.register-text {
+    text-align: center;
+}
+
+a {
+    text-decoration: none;
+}
+
+.btn-link {
+    box-shadow: none !important;
+}
+
+textarea {
+    resize: none;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
 }
