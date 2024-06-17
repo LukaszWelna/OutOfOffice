@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OutOfOffice.MVC.Models;
 using System.Diagnostics;
@@ -14,11 +15,6 @@ namespace OutOfOffice.MVC.Controllers
         }
 
         public IActionResult Index()
-        {
-            return View();
-        }
-
-        public IActionResult Privacy()
         {
             return View();
         }
