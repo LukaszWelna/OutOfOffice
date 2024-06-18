@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OutOfOffice.Domain.Interfaces;
 using OutOfOffice.Infrastructure.Persistence;
+using OutOfOffice.Infrastructure.Repositories;
 using OutOfOffice.Infrastructure.Seeders;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,7 @@ namespace OutOfOffice.Infrastructure.Extensions
             services.AddScoped<UserRoleSeeder>();
 
             // Add repositories
-            services.AddScoped<IUserRoleRepository, IUserRoleRepository>();
+            services.AddScoped<IUserRoleRepository, UserRoleRepository>();
 
         }
     }

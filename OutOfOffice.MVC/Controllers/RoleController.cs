@@ -1,15 +1,25 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OutOfOffice.Application.Services;
 
 namespace OutOfOffice.MVC.Controllers
 {
     [Authorize(Roles = "Administrator")]
     public class RoleController : Controller
     {
-        [HttpGet]
-        public IActionResult Index()
+        private readonly IUserRoleService _userRoleService;
+
+        public RoleController(IUserRoleService userRoleService)
         {
-            return View();
+            _userRoleService = userRoleService;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            var userRoleDtos = await _userRoleService.GetViewDataAsync();
+
+            return View(userRoleDtos);
         }
     }
 }

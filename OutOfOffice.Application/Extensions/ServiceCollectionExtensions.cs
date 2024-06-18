@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using OutOfOffice.Application.ApplicationUser;
+using OutOfOffice.Application.Mappings;
 using OutOfOffice.Application.Services;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,12 @@ namespace OutOfOffice.Application.Extensions
     {
         public static void AddApplication(this IServiceCollection services)
         {
+            // Add Auto mapper
+            services.AddAutoMapper(typeof(UserRoleMappingProfile));
+
+            // Add services
             services.AddScoped<IUserContextService, UserContextService>();
+
             services.AddScoped<IUserRoleService, UserRoleService>();
         }
     }
