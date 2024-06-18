@@ -17,28 +17,29 @@
                         nameof(UserDto.Id),
                         nameof(UserDto.Email)))"
                             class="form-select form-select-md">
-                        <option value="0">Please select one</option>
+                        <option value="">Please select one</option>
                     </select>
                     <label asp-for="SelectedUserId">User</label>
-                    <span asp-validation-for="SelectedUserId" class="text-danger" id="userIdSpan"></span>
+                    <span asp-validation-for="SelectedUserId" class="text-danger" id="selectedUserIdSpan"></span>
                 </div>              
                 <div class="form-floating mb-3">
                     <select asp-for="SelectedRoleId" asp-items="@(new SelectList(Model.RoleDtos,
                         nameof(RoleDto.Id),
                         nameof(RoleDto.Name)))"
                             class="form-select form-select-md">
-                        <option value="0">Please select one</option>
+                        <option value="">Please select one</option>
                     </select>
                     <label asp-for="SelectedRoleId">Role</label>
-                    <span asp-validation-for="SelectedRoleId" class="text-danger" id="roleIdSpan"></span>
+                    <span asp-validation-for="SelectedRoleId" class="text-danger" id="selectedRoleIdSpan"></span>
                 </div>
-                <button id="roleSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Update role</button>
+                <button id="userRoleSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Update role</button>
             </form>
         </div>
     </div>
 </div>
 
-@section Scripts {
+@section Scripts
+{
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }

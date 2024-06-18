@@ -26,6 +26,15 @@ namespace OutOfOffice.MVC.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(UserRoleDto userRoleDto)
         {
+            if (!ModelState.IsValid)
+            {
+                var userRoleDtoAfterValidation = await _userRoleService.GetViewDataAsync();
+                userRoleDtoAfterValidation.SelectedUserId = userRoleDto.SelectedUserId;
+                userRoleDtoAfterValidation.SelectedRoleId = userRoleDto.SelectedRoleId;
+
+                return View(userRoleDtoAfterValidation);
+            }
+
             await _userRoleService.UpdateUserRoleAsync(userRoleDto);
 
             return RedirectToAction(nameof(Index));
