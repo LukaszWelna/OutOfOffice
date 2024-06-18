@@ -7,6 +7,6 @@ namespace OutOfOffice.Domain.Interfaces
     {
         public Task<IEnumerable<UserDto>> GetAllUsersWithRolesAsync();
         public Task<IEnumerable<IdentityRole>> GetAllRolesAsync();
-        public Task UpdateAsync();
+        public Task UpdateUserRoleAsync(UserRoleDto userRoleDto);
     }
 }

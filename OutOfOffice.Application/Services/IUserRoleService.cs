@@ -1,10 +1,4 @@
-﻿using OutOfOffice.Application.UserRole;
-using OutOfOffice.Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using OutOfOffice.Domain.Models;
 
 namespace OutOfOffice.Application.Services
 {
@@ -12,6 +6,6 @@ namespace OutOfOffice.Application.Services
     {
         public Task<UserRoleDto> GetViewDataAsync();
         public Task<IEnumerable<UserDto>> GetAllUsersWithRolesAsync();
-        public Task UpdateAsync();
+        public Task UpdateUserRoleAsync(UserRoleDto userRoleDto);
     }
 }
