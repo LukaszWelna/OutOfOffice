@@ -1,12 +1,6 @@
 ﻿using AutoMapper;
-using OutOfOffice.Application.UserRole;
 using OutOfOffice.Domain.Interfaces;
 using OutOfOffice.Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OutOfOffice.Application.Services
 {
@@ -51,9 +45,9 @@ namespace OutOfOffice.Application.Services
             return roleDtos;
         }
 
-        public async Task UpdateAsync()
+        public async Task UpdateUserRoleAsync(UserRoleDto userRoleDto)
         {
-            await _userRoleRepository.UpdateAsync();
+            await _userRoleRepository.UpdateUserRoleAsync(userRoleDto);
         }
 
     }

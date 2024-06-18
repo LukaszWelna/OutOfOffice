@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OutOfOffice.Application.UserRole
+namespace OutOfOffice.Domain.Models
 {
     public class RoleDto
     {

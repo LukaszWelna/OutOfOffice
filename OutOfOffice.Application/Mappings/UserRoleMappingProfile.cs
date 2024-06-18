@@ -1,11 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
-using OutOfOffice.Application.UserRole;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using OutOfOffice.Domain.Models;
 
 namespace OutOfOffice.Application.Mappings
 {

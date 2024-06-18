@@ -1,5 +1,4 @@
-﻿@using OutOfOffice.Application.UserRole
-@using OutOfOffice.Domain.Models
+﻿@using OutOfOffice.Domain.Models
 
 @model UserRoleDto
 
@@ -10,7 +9,7 @@
 <div class="container col-xl-10 col-xxl-10 px-4 py-5">
     <div class="row align-items-center">
         <div class="col-md-10 mx-auto col-lg-6 p-4 rounded-3 form-column">
-            <form id="incomeForm" asp-action="Create" method="post">
+            <form id="userRoleForm" asp-action="Index" method="post">
                 <h2 class="form-header">Manage user roles</h2>
                 <hr />
                 <div class="form-floating mb-3">
@@ -33,7 +32,7 @@
                     <label asp-for="SelectedRoleId">Role</label>
                     <span asp-validation-for="SelectedRoleId" class="text-danger" id="roleIdSpan"></span>
                 </div>
-                <button id="incomeSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Update role</button>
+                <button id="roleSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Update role</button>
             </form>
         </div>
     </div>
