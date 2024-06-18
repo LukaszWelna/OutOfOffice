@@ -11,7 +11,7 @@ namespace OutOfOffice.Domain.Models
     {
         public IEnumerable<UserDto> UserDtos { get; set; } = new List<UserDto>();
         public IEnumerable<RoleDto> RoleDtos { get; set; } = new List<RoleDto>();
-        public string SelectedUserId { get; set; } = default!;
-        public string SelectedRoleId { get; set; } = default!;
+        public string? SelectedUserId { get; set; }
+        public string? SelectedRoleId { get; set; }
     }
 }

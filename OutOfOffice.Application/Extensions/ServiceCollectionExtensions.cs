@@ -1,13 +1,10 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using FluentValidation;
+using FluentValidation.AspNetCore;
+using Microsoft.Extensions.DependencyInjection;
 using OutOfOffice.Application.ApplicationUser;
 using OutOfOffice.Application.Mappings;
 using OutOfOffice.Application.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+using OutOfOffice.Application.Validators;
 
 namespace OutOfOffice.Application.Extensions
 {
@@ -22,6 +19,11 @@ namespace OutOfOffice.Application.Extensions
             services.AddScoped<IUserContextService, UserContextService>();
 
             services.AddScoped<IUserRoleService, UserRoleService>();
+
+            // Add Fluent validation
+            services.AddValidatorsFromAssemblyContaining<UserRoleDtoValidator>()
+                    .AddFluentValidationAutoValidation()
+                    .AddFluentValidationClientsideAdapters();
         }
     }
 }
