@@ -1,4 +1,5 @@
 ﻿@using Newtonsoft.Json
+
 @{
     // Get current controller and action
     var currentController=ViewContext.RouteData.Values["Controller"]?.ToString();
@@ -36,8 +37,23 @@
                             <a class="nav-link text-dark @(currentController == "Home" && currentAction == "Index" ? "active" : "")" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark @(currentController == "Role" && currentAction == "Index" ? "active" : "")" asp-area="" asp-controller="Role" asp-action="Index">Manage roles</a>
+                            <a class="nav-link text-dark @(currentController == "Employee" && currentAction == "Index" ? "active" : "")" asp-area="" asp-controller="Employee" asp-action="Index">Employees</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark @(currentController == "LeaveRequest" && currentAction == "Index" ? "active" : "")" asp-area="" asp-controller="LeaveRequest" asp-action="Index">Leave requests</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark @(currentController == "ApprovalRequest" && currentAction == "Index" ? "active" : "")" asp-area="" asp-controller="ApprovalRequest" asp-action="Index">Approval requests</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark @(currentController == "Project" && currentAction == "Index" ? "active" : "")" asp-area="" asp-controller="Project" asp-action="Index">Projects</a>
+                        </li>
+                        @if (User.IsInRole("Administrator"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark @(currentController == "Role" && currentAction == "Index" ? "active" : "")" asp-area="" asp-controller="Role" asp-action="Index">Manage roles</a>
+                            </li>
+                        }
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
@@ -51,8 +67,8 @@
     </div>
 
     <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 - OutOfOffice.MVC - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        <div class="container text-center">
+            &copy; 2024 - OutOfOffice
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

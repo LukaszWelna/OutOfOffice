@@ -1,0 +1,77 @@
+﻿@using OutOfOffice.Application.Employee
+@using OutOfOffice.Domain.Entities
+
+@model CreateEmployeeDto
+
+@{
+    ViewData["Title"] = "Create employee";
+}
+
+<div class="container col-xl-10 col-xxl-10 px-4 py-5">
+    <div class="row align-items-center">
+        <div class="col-md-10 mx-auto col-lg-6 p-4 rounded-3 form-column">
+            <form id="employeeForm" asp-action="Create" method="post">
+                <h2 class="form-header">Create employee</h2>
+                <hr />
+                <div class="form-floating mb-3">
+                    <input asp-for="FullName" class="form-control" placeholder="Full name" />
+                    <label asp-for="FullName" class="control-label">Full name</label>
+                    <span asp-validation-for="FullName" class="text-danger" id="fullNameSpan"></span>
+                </div>
+                <div class="form-floating mb-3">
+                    <select asp-for="SubdivisionId" asp-items="@(new SelectList(Model.Subdivisions,
+                        nameof(Subdivision.Id),
+                        nameof(Subdivision.Name)))"
+                            class="form-select form-select-md">
+                        <option value="0">Please select one</option>
+                    </select>
+                    <label asp-for="SubdivisionId">Subdivision</label>
+                    <span asp-validation-for="SubdivisionId" class="text-danger" id="subdivisionIdSpan"></span>
+                </div>
+                <div class="form-floating mb-3">
+                    <select asp-for="PositionId" asp-items="@(new SelectList(Model.Positions,
+                        nameof(Subdivision.Id),
+                        nameof(Subdivision.Name)))"
+                            class="form-select form-select-md">
+                        <option value="0">Please select one</option>
+                    </select>
+                    <label asp-for="PositionId">Subdivision</label>
+                    <span asp-validation-for="PositionId" class="text-danger" id="positionIdSpan"></span>
+                </div>
+                <div class="form-check mb-3">
+                    <input asp-for="Status" class="form-check-input" type="checkbox">
+                    <label asp-for="Status" class="form-check-label">
+                        Active
+                    </label>
+                </div>
+                <div class="form-floating mb-3">
+                    <select asp-for="PeoplePartnerId" asp-items="@(new SelectList(Model.PeoplePartners,
+                        nameof(Employee.Id),
+                        nameof(Employee.FullName)))"
+                            class="form-select form-select-md">
+                        <option value="0">Please select one</option>
+                    </select>
+                    <label asp-for="PeoplePartnerId">People partner</label>
+                    <span asp-validation-for="PeoplePartnerId" class="text-danger" id="peoplePartnerIdSpan"></span>
+                </div>
+                <div class="form-floating mb-3">
+                    <input asp-for="OutOfOfficeBalance" class="form-control" placeholder="Out of office balance" />
+                    <label asp-for="OutOfOfficeBalance" class="control-label">Out of office balance</label>
+                    <span asp-validation-for="OutOfOfficeBalance" class="text-danger" id="outOfOfficeBalanceSpan"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="Photo">Photo</label>
+                    <input asp-for="Photo" class="form-control" placeholder="Photo" type="file" />
+                    <span asp-validation-for="Photo" class="text-danger" id="photoSpan"></span>
+                </div>
+                <button id="employeeSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Create</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
