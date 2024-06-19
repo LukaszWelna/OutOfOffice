@@ -32,6 +32,7 @@ namespace OutOfOffice.Infrastructure.Extensions
 
             // Add repositories
             services.AddScoped<IUserRoleRepository, UserRoleRepository>();
+            services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 
         }
     }

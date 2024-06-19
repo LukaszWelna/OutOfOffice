@@ -17,8 +17,8 @@ namespace OutOfOffice.Application.Extensions
 
             // Add services
             services.AddScoped<IUserContextService, UserContextService>();
-
             services.AddScoped<IUserRoleService, UserRoleService>();
+            services.AddScoped<IEmployeeService, EmployeeService>();
 
             // Add Fluent validation
             services.AddValidatorsFromAssemblyContaining<UserRoleDtoValidator>()
