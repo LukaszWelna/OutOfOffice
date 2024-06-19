@@ -50,5 +50,11 @@ namespace OutOfOffice.Application.Services
             await _userRoleRepository.UpdateUserRoleAsync(userRoleDto);
         }
 
+        public async Task<string> GetRoleByUserId(string userId)
+        {
+            var userRole = await _userRoleRepository.GetRoleByUserId(userId);
+
+            return userRole ?? "";
+        }
     }
 }

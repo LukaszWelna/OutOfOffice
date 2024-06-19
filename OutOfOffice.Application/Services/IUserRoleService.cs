@@ -7,5 +7,6 @@ namespace OutOfOffice.Application.Services
         public Task<UserRoleDto> GetViewDataAsync();
         public Task<IEnumerable<UserDto>> GetAllUsersWithRolesAsync();
         public Task UpdateUserRoleAsync(UserRoleDto userRoleDto);
+        public Task<string> GetRoleByUserId(string userId);
     }
 }

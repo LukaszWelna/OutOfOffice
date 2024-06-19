@@ -32,8 +32,8 @@ namespace OutOfOffice.Infrastructure.Repositories
                 userDtos.Add(new UserDto()
                 {
                     Id = user.Id,
-                    Email = user.UserName ?? "No email provided",
-                    Role = role ?? "No role assigned"
+                    Email = user.UserName ?? "",
+                    Role = role ?? ""
                 });
             }
 
@@ -51,14 +51,14 @@ namespace OutOfOffice.Infrastructure.Repositories
 
         public async Task UpdateUserRoleAsync(UserRoleDto userRoleDto)
         {
-            var user = await _userManager.FindByIdAsync(userRoleDto.SelectedUserId);
+            var user = await _userManager.FindByIdAsync(userRoleDto.SelectedUserId!);
 
             if (user == null)
             {
                 throw new InvalidOperationException("There is no user with selected ID.");
             }
 
-            var role = await _roleManager.FindByIdAsync(userRoleDto.SelectedRoleId);
+            var role = await _roleManager.FindByIdAsync(userRoleDto.SelectedRoleId!);
 
             if (role == null)
             {
@@ -71,6 +71,26 @@ namespace OutOfOffice.Infrastructure.Repositories
 
             // Add new role to user
             await _userManager.AddToRoleAsync(user, role.Name ?? "");
+        }
+
+        public async Task<string> GetRoleByUserId(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                throw new InvalidOperationException("There is no user with selected ID.");
+            }
+
+            var currentRoles = await _userManager.GetRolesAsync(user);
+
+            var role = currentRoles.FirstOrDefault();
+
+            var identityRole = await _roleManager.FindByNameAsync(role!);
+
+            var roleId = identityRole?.Id;
+
+            return roleId ?? "";
         }
     }
 }

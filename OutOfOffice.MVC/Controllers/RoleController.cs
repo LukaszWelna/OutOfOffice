@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using OutOfOffice.Application.Services;
 using OutOfOffice.Domain.Models;
+using OutOfOffice.MVC.Extensions;
 
 namespace OutOfOffice.MVC.Controllers
 {
@@ -37,7 +38,17 @@ namespace OutOfOffice.MVC.Controllers
 
             await _userRoleService.UpdateUserRoleAsync(userRoleDto);
 
+            this.SetNotification("success", "Role updated successfully");
+
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetRoleByUserId(string id)
+        {
+            var data = await _userRoleService.GetRoleByUserId(id);
+
+            return Ok(data);
         }
     }
 }
