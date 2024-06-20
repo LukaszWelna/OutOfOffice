@@ -12,9 +12,8 @@ namespace OutOfOffice.Domain.Entities
         public string ProjectType { get; set; } = default!;
         public DateOnly StartDate { get; set; }
         public DateOnly EndDate { get; set; }
-        public int ProjectManagerId { get; set; }
-        public Employee ProjectManager { get; set; } = default!;
         public string? Comment { get; set; }
         public string Status { get; set; } = default!;
+        public List<EmployeeProject> EmployeeProjects { get; set; } = new List<EmployeeProject>();
     }
 }

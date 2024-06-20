@@ -10,15 +10,16 @@ namespace OutOfOffice.Domain.Entities
     {
         public int Id { get; set; }
         public string FullName { get; set; } = default!;
+        public string Email { get; set; } = default!;
         public string Subdivision { get; set; } = default!;
         public string Position { get; set; } = default!;
         public bool Status { get; set; }
-        public int PeoplePartnerId { get; set; }
-        public Employee PeoplePartner { get; set; } = default!;
+        public int? PeoplePartnerId { get; set; }
+        public Employee? PeoplePartner { get; set; }
         public int OutOfOfficeBalance { get; set; }
         public byte[]? Photo { get; set; }
         public ApprovalRequest ApprovalRequest { get; set; } = default!;
         public LeaveRequest LeaveRequest { get; set; } = default!;
-        public List<Project> Projects { get; set; } = new List<Project>();
+        public List<EmployeeProject> EmployeeProjects { get; set; } = new List<EmployeeProject>();
     }
 }

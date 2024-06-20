@@ -34,22 +34,27 @@ namespace OutOfOffice.Infrastructure.Persistence
                 eb.HasOne(e => e.PeoplePartner)
                 .WithMany()
                 .HasForeignKey(e => e.PeoplePartnerId)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.Restrict);
 
                 eb.Property(e => e.FullName)
                 .HasColumnType("varchar(50)")
                 .IsRequired();
 
+                eb.HasIndex(e => e.Email)
+                .IsUnique();
+
+                eb.Property(e => e.Email)
+                .IsRequired();
+
                 eb.Property(e => e.Subdivision)
-                .HasColumnType("varchar(25)")
+                .HasColumnType("varchar(50)")
                 .IsRequired();
 
                 eb.Property(e => e.Position)
-                .HasColumnType("varchar(25)")
+                .HasColumnType("varchar(50)")
                 .IsRequired();
 
                 eb.Property(e => e.Status)
-                .HasColumnType("varchar(25)")
                 .IsRequired();
 
                 eb.Property(e => e.OutOfOfficeBalance)
@@ -102,11 +107,6 @@ namespace OutOfOffice.Infrastructure.Persistence
 
             modelBuilder.Entity<Project>(eb =>
             {
-                eb.HasOne(p => p.ProjectManager)
-                .WithMany(e => e.Projects)
-                .HasForeignKey(p => p.ProjectManagerId)
-                .OnDelete(DeleteBehavior.NoAction);
-
                 eb.Property(p => p.ProjectType)
                 .HasColumnType("varchar(25)")
                 .IsRequired();

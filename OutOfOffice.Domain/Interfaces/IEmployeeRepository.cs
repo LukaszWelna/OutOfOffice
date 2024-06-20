@@ -9,6 +9,9 @@ namespace OutOfOffice.Domain.Interfaces
 {
     public interface IEmployeeRepository
     {
-        public Task<IEnumerable<Employee>> GetPeoplePartners();
+        public Task<IEnumerable<Employee>> GetPeoplePartnersAsync();
+        public Task CreateEmployeeAsync(Employee employee);
+        public Task CreateEmployeeProjectAsync(int projectId);
+        public Task<Employee?> GetEmployeeByEmailAsync(string email);
     }
 }
