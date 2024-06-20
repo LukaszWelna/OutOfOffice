@@ -19,6 +19,11 @@
                     <span asp-validation-for="FullName" class="text-danger" id="fullNameSpan"></span>
                 </div>
                 <div class="form-floating mb-3">
+                    <input asp-for="Email" class="form-control" placeholder="Email" type="email" />
+                    <label asp-for="Email" class="control-label">Email</label>
+                    <span asp-validation-for="Email" class="text-danger" id="emailSpan"></span>
+                </div>
+                <div class="form-floating mb-3">
                     <select asp-for="SubdivisionId" asp-items="@(new SelectList(Model.Subdivisions,
                         nameof(Subdivision.Id),
                         nameof(Subdivision.Name)))"
@@ -59,18 +64,14 @@
                     <label asp-for="OutOfOfficeBalance" class="control-label">Out of office balance</label>
                     <span asp-validation-for="OutOfOfficeBalance" class="text-danger" id="outOfOfficeBalanceSpan"></span>
                 </div>
-                <div class="form-group mb-3">
-                    <label asp-for="Photo">Photo</label>
-                    <input asp-for="Photo" class="form-control" placeholder="Photo" type="file" />
-                    <span asp-validation-for="Photo" class="text-danger" id="photoSpan"></span>
-                </div>
                 <button id="employeeSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Create</button>
             </form>
         </div>
     </div>
 </div>
 
-@section Scripts {
+@section Scripts
+{
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }

@@ -10,7 +10,8 @@ namespace OutOfOffice.Application.Employee
     public class CreateEmployeeDto
     {
         public int Id { get; set; }
-        public string FullName { get; set; } = default!;
+        public string? FullName { get; set; }
+        public string? Email { get; set; }
         public int SubdivisionId { get; set; }
         public List<Subdivision> Subdivisions { get; set; } = new List<Subdivision>();
         public int PositionId { get; set; }

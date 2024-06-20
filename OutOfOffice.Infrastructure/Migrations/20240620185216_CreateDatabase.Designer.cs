@@ -12,8 +12,8 @@ using OutOfOffice.Infrastructure.Persistence;
 namespace OutOfOffice.Infrastructure.Migrations
 {
     [DbContext(typeof(OutOfOfficeDbContext))]
-    [Migration("20240616184734_Identity")]
-    partial class Identity
+    [Migration("20240620185216_CreateDatabase")]
+    partial class CreateDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -170,10 +170,12 @@ namespace OutOfOffice.Infrastructure.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -210,10 +212,12 @@ namespace OutOfOffice.Infrastructure.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -263,6 +267,10 @@ namespace OutOfOffice.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("FullName")
                         .IsRequired()
                         .HasColumnType("varchar(50)");
@@ -270,7 +278,7 @@ namespace OutOfOffice.Infrastructure.Migrations
                     b.Property<int>("OutOfOfficeBalance")
                         .HasColumnType("int");
 
-                    b.Property<int>("PeoplePartnerId")
+                    b.Property<int?>("PeoplePartnerId")
                         .HasColumnType("int");
 
                     b.Property<byte[]>("Photo")
@@ -278,21 +286,46 @@ namespace OutOfOffice.Infrastructure.Migrations
 
                     b.Property<string>("Position")
                         .IsRequired()
-                        .HasColumnType("varchar(25)");
+                        .HasColumnType("varchar(50)");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("varchar(25)");
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Subdivision")
                         .IsRequired()
-                        .HasColumnType("varchar(25)");
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.HasIndex("PeoplePartnerId");
 
                     b.ToTable("Employees");
+                });
+
+            modelBuilder.Entity("OutOfOffice.Domain.Entities.EmployeeProject", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("EmployeeProject");
                 });
 
             modelBuilder.Entity("OutOfOffice.Domain.Entities.LeaveRequest", b =>
@@ -345,9 +378,6 @@ namespace OutOfOffice.Infrastructure.Migrations
                     b.Property<DateOnly>("EndDate")
                         .HasColumnType("date");
 
-                    b.Property<int>("ProjectManagerId")
-                        .HasColumnType("int");
-
                     b.Property<string>("ProjectType")
                         .IsRequired()
                         .HasColumnType("varchar(25)");
@@ -360,8 +390,6 @@ namespace OutOfOffice.Infrastructure.Migrations
                         .HasColumnType("varchar(25)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ProjectManagerId");
 
                     b.ToTable("Projects");
                 });
@@ -441,10 +469,28 @@ namespace OutOfOffice.Infrastructure.Migrations
                     b.HasOne("OutOfOffice.Domain.Entities.Employee", "PeoplePartner")
                         .WithMany()
                         .HasForeignKey("PeoplePartnerId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("PeoplePartner");
+                });
+
+            modelBuilder.Entity("OutOfOffice.Domain.Entities.EmployeeProject", b =>
+                {
+                    b.HasOne("OutOfOffice.Domain.Entities.Employee", "Employee")
+                        .WithMany("EmployeeProjects")
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("OutOfOffice.Domain.Entities.Project", "Project")
+                        .WithMany("EmployeeProjects")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("Project");
                 });
 
             modelBuilder.Entity("OutOfOffice.Domain.Entities.LeaveRequest", b =>
@@ -458,32 +504,26 @@ namespace OutOfOffice.Infrastructure.Migrations
                     b.Navigation("Employee");
                 });
 
-            modelBuilder.Entity("OutOfOffice.Domain.Entities.Project", b =>
-                {
-                    b.HasOne("OutOfOffice.Domain.Entities.Employee", "ProjectManager")
-                        .WithMany("Projects")
-                        .HasForeignKey("ProjectManagerId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("ProjectManager");
-                });
-
             modelBuilder.Entity("OutOfOffice.Domain.Entities.Employee", b =>
                 {
                     b.Navigation("ApprovalRequest")
                         .IsRequired();
 
+                    b.Navigation("EmployeeProjects");
+
                     b.Navigation("LeaveRequest")
                         .IsRequired();
-
-                    b.Navigation("Projects");
                 });
 
             modelBuilder.Entity("OutOfOffice.Domain.Entities.LeaveRequest", b =>
                 {
                     b.Navigation("ApprovalRequest")
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("OutOfOffice.Domain.Entities.Project", b =>
+                {
+                    b.Navigation("EmployeeProjects");
                 });
 #pragma warning restore 612, 618
         }
