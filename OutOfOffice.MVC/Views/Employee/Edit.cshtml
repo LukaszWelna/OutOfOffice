@@ -44,16 +44,19 @@
                         Active
                     </label>
                 </div>
-                <div class="form-floating mb-3">
-                    <select asp-for="PeoplePartnerId" asp-items="@(new SelectList(Model.PeoplePartners,
+                @if (User.IsInRole("Administrator") || User.IsInRole("HR Manager"))
+                {
+                    <div class="form-floating mb-3">
+                        <select asp-for="PeoplePartnerId" asp-items="@(new SelectList(Model.PeoplePartners,
                         nameof(Employee.Id),
                         nameof(Employee.FullName)))"
-                            class="form-select form-select-md">
-                        <option value="0">Please select one</option>
-                    </select>
-                    <label asp-for="PeoplePartnerId">People partner</label>
-                    <span asp-validation-for="PeoplePartnerId" class="text-danger" id="peoplePartnerIdSpan"></span>
-                </div>
+                        class="form-select form-select-md">
+                            <option value="0">Please select one</option>
+                        </select>
+                        <label asp-for="PeoplePartnerId">People partner</label>
+                        <span asp-validation-for="PeoplePartnerId" class="text-danger" id="peoplePartnerIdSpan"></span>
+                    </div>
+                }
                 @if(User.IsInRole("Administrator") || User.IsInRole("Project Manager"))
                 {
                     <div class="form-floating mb-3">
