@@ -51,5 +51,84 @@ namespace OutOfOffice.Infrastructure.Repositories
 
             return employee;
         }
+
+        public async Task<List<Employee>> GetAllEmployeesAsync(string searchPhrase, string sortOrder)
+        {
+            var employees = _dbContext.Employees
+                .Include(e => e.EmployeeProjects)
+                .ThenInclude(p => p.Project)
+                .Where(e => searchPhrase == null || e.FullName.ToLower().Contains(searchPhrase.ToLower()));
+
+            switch (sortOrder)
+            {
+                case "fullNameDesc":
+                    employees = employees.OrderByDescending(e => e.FullName);
+                    break;
+                case "emailAsc":
+                    employees = employees.OrderBy(e => e.Email);
+                    break;
+                case "emailDesc":
+                    employees = employees.OrderByDescending(e => e.Email);
+                    break;
+                case "subdivisionAsc":
+                    employees = employees.OrderBy(e => e.Subdivision);
+                    break;
+                case "subdivisionDesc":
+                    employees = employees.OrderByDescending(e => e.Subdivision);
+                    break;
+                case "positionAsc":
+                    employees = employees.OrderBy(e => e.Position);
+                    break;
+                case "positionDesc":
+                    employees = employees.OrderByDescending(e => e.Position);
+                    break;      
+                case "statusActive":
+                    employees = employees.OrderBy(e => e.Status);
+                    break;
+                case "statusInactive":
+                    employees = employees.OrderByDescending(e => e.Status);
+                    break;
+                case "peoplePartnerAsc":
+                    employees = employees.OrderBy(e => e.PeoplePartner != null ? e.PeoplePartner.FullName : String.Empty);
+                    break;
+                case "peoplePartnerDesc":
+                    employees = employees.OrderByDescending(e => e.PeoplePartner != null ? e.PeoplePartner.FullName : String.Empty);
+                    break;
+                case "projectTypeAsc":
+                    employees = employees.OrderBy(e => e.EmployeeProjects.Any() ? e.EmployeeProjects.First().Project.ProjectType : String.Empty);
+                    break;
+                case "projectTypeDesc":
+                    employees = employees.OrderByDescending(e => e.EmployeeProjects.Any() ? e.EmployeeProjects.First().Project.ProjectType : String.Empty);
+                    break;
+                case "daysOffAsc":
+                    employees = employees.OrderBy(e => e.OutOfOfficeBalance);
+                    break;
+                case "daysOffDesc":
+                    employees = employees.OrderByDescending(e => e.OutOfOfficeBalance);
+                    break;
+                default:
+                    employees = employees.OrderBy(e => e.FullName);
+                    break;
+            }
+
+            return await employees.ToListAsync();
+        }
+
+        public async Task<Employee> GetEmployeeByIdAsync(int id)
+        {
+            var employee = await _dbContext.Employees
+                .Include(e => e.EmployeeProjects)
+                .FirstOrDefaultAsync(e => e.Id == id);
+
+            if (employee == null)
+            {
+                throw new InvalidOperationException("Employee with specified id doesn't exist.");
+            }
+
+            return employee;
+        }
+
+        public async Task Commit()
+            => await _dbContext.SaveChangesAsync();
     }
 }

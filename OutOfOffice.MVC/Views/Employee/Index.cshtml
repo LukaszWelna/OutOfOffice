@@ -1,1 +1,107 @@
-﻿<a class="link" asp-controller="Employee" asp-action="Create">Add new employee</a>
+﻿@using OutOfOffice.Application.Employee
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject UserManager<IdentityUser> UserManager
+
+@model List<GetEmployeeDto>
+
+@{
+    ViewData["Title"] = "Employees";
+}
+
+<div class="container col-xl-12 col-xxl-12">
+    <div class="row align-items-center">
+        <div class="col-12 table-container p-3 rounded-2 mb-4">
+            <h3 class="text-center mb-3">Employees</h3>
+            <form asp-action="Index" method="get">
+                <div>
+                    @if (User.IsInRole("Administrator") || User.IsInRole("HR Manager"))
+                    {
+                        <div class="mb-2">
+                            <a class="link mb-3" asp-controller="Employee" asp-action="Create">Create new employee</a>
+                        </div>
+                    }
+                    <div class="d-flex align-items-center mb-3">
+                        Find by Full Name: 
+                        <input class="mx-1" type="text" name="SearchPhrase" value="@ViewData["CurrentSearchPhrase"]" />
+                        <button id="filterSubmit" type="submit" class="btn btn-secondary me-1">Filter</button> |
+                        <a class="link mx-1" asp-action="Index">Back to Full List</a>
+                        <input type="hidden" name="SortOrder" value="@ViewData["CurrentSortOrder"]" />
+                    </div>
+                </div>
+            </form>
+            @if (Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-borderless mb-0 table-balance">
+                        <tbody>
+                            <tr>
+                                <th>
+                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["FullNameSortParam"]" asp-route-searchPhrase="@ViewData["CurrentSearchPhrase"]">Full name</a>
+                                </th>
+                                <th>
+                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["EmailSortParam"]" asp-route-searchPhrase="@ViewData["CurrentSearchPhrase"]">Email</a>
+                                </th>
+                                <th>
+                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["SubdivisionSortParam"]" asp-route-searchPhrase="@ViewData["CurrentSearchPhrase"]">Subdivision</a>
+                                </th>
+                                <th>
+                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["PositionSortParam"]" asp-route-searchPhrase="@ViewData["CurrentSearchPhrase"]">Position</a>
+                                </th>
+                                <th>
+                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["StatusSortParam"]" asp-route-searchPhrase="@ViewData["CurrentSearchPhrase"]">Status</a>
+                                </th>
+                                <th>
+                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["PeoplePartnerSortParam"]" asp-route-searchPhrase="@ViewData["CurrentSearchPhrase"]">People Partner</a>
+                                </th>
+                                <th>
+                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["ProjectTypeSortParam"]" asp-route-searchPhrase="@ViewData["CurrentSearchPhrase"]">Project Type</a>
+                                </th>
+                                <th>
+                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["DaysOffSortParam"]" asp-route-searchPhrase="@ViewData["CurrentSearchPhrase"]">Days Off</a>
+                                </th>
+                                <th>Edit</th>
+                            </tr>
+                            @foreach (var employee in Model)
+                            {
+                                <tr class="border-bottom">
+                                    <td>
+                                        @employee.FullName
+                                    </td>
+                                    <td>
+                                        @employee.Email
+                                    </td>
+                                    <td>
+                                        @employee.Subdivision
+                                    </td>
+                                    <td>
+                                        @employee.Position
+                                    </td>
+                                    <td>
+                                        @employee.Status
+                                    </td>
+                                    <td>
+                                        @employee.PeoplePartner
+                                    </td>
+                                    <td>
+                                        @employee.ProjectType
+                                    </td>
+                                    <td>
+                                        @employee.OutOfOfficeBalance
+                                    </td>
+                                    <td>
+                                        <a class="bi bi-pencil mx-1" asp-controller="Employee" asp-action="Edit" asp-route-id="@employee.Id"></a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <p class="text-center">No employees to show.</p>
+            }
+        </div>
+    </div>
+</div>

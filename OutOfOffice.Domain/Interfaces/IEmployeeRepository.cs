@@ -13,5 +13,8 @@ namespace OutOfOffice.Domain.Interfaces
         public Task CreateEmployeeAsync(Employee employee);
         public Task CreateEmployeeProjectAsync(int projectId);
         public Task<Employee?> GetEmployeeByEmailAsync(string email);
+        public Task<List<Employee>> GetAllEmployeesAsync(string searchPhrase, string sortOrder);
+        public Task<Employee> GetEmployeeByIdAsync(int id);
+        public Task Commit();
     }
 }

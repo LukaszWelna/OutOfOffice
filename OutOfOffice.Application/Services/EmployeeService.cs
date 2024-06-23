@@ -66,5 +66,55 @@ namespace OutOfOffice.Application.Services
 
             return employee;
         }
+
+        public async Task<List<GetEmployeeDto>> GetAllEmployeesAsync(string searchPhrase, string sortOrder)
+        {
+            var employees = await _employeeRepository.GetAllEmployeesAsync(searchPhrase, sortOrder);
+
+            var getEmployeeDtos = _mapper.Map<List<GetEmployeeDto>>(employees);
+
+            return getEmployeeDtos;
+        }
+
+        public async Task<EditEmployeeDto> GetEditEmployeeDtoByIdAsync(int id)
+        {
+            var employee = await _employeeRepository.GetEmployeeByIdAsync(id);
+
+            var editEmployeeDto = _mapper.Map<EditEmployeeDto>(employee);
+
+            var peoplePartners = await _employeeRepository.GetPeoplePartnersAsync();
+
+            editEmployeeDto.Subdivisions = SubdivisionList.Subdivisions;
+            editEmployeeDto.Positions = PositionList.Positions;
+            editEmployeeDto.PeoplePartners = peoplePartners.ToList();
+
+            return editEmployeeDto;
+        }
+
+        public async Task EditEmployeeById(EditEmployeeDto editEmployeeDto)
+        {
+            var employee = await _employeeRepository.GetEmployeeByIdAsync(editEmployeeDto.Id);
+
+            employee.FullName = editEmployeeDto.FullName!;
+            employee.Subdivision = SubdivisionList.Subdivisions.FirstOrDefault(s => s.Id == editEmployeeDto.SubdivisionId)?.Name ?? "";
+            employee.Position = PositionList.Positions.FirstOrDefault(p => p.Id == editEmployeeDto.PositionId)?.Name ?? "";
+            employee.Status = editEmployeeDto.Status;
+            employee.PeoplePartnerId = editEmployeeDto.PeoplePartnerId != 0 ? editEmployeeDto.PeoplePartnerId : null;
+            employee.OutOfOfficeBalance = editEmployeeDto.OutOfOfficeBalance;
+            employee.Photo = editEmployeeDto.Photo;
+
+            await _employeeRepository.Commit();
+        }
+
+        public async Task<EditEmployeeDto> GetEditEmployeeDtoAfterValidationAsync(EditEmployeeDto editEmployeeDto)
+        {
+            var peoplePartners = await _employeeRepository.GetPeoplePartnersAsync();
+
+            editEmployeeDto.Subdivisions = SubdivisionList.Subdivisions;
+            editEmployeeDto.Positions = PositionList.Positions;
+            editEmployeeDto.PeoplePartners = peoplePartners.ToList();
+
+            return editEmployeeDto;
+        }
     }
 }
