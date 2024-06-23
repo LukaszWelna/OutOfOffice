@@ -1,27 +1,22 @@
 ﻿@using OutOfOffice.Application.Employee
 @using OutOfOffice.Domain.Entities
 
-@model CreateEmployeeDto
+@model EditEmployeeDto
 
 @{
-    ViewData["Title"] = "Create employee";
+    ViewData["Title"] = "Edit employee";
 }
 
 <div class="container col-xl-10 col-xxl-10 px-4 py-5">
     <div class="row align-items-center">
         <div class="col-md-10 mx-auto col-lg-6 p-4 rounded-3 form-column">
-            <form id="employeeForm" asp-action="Create" method="post">
-                <h2 class="form-header">Create employee</h2>
+            <form id="employeeForm" asp-action="Edit" method="post">
+                <h2 class="form-header">Edit employee</h2>
                 <hr />
                 <div class="form-floating mb-3">
                     <input asp-for="FullName" class="form-control" placeholder="Full name" />
                     <label asp-for="FullName" class="control-label">Full name</label>
                     <span asp-validation-for="FullName" class="text-danger" id="fullNameSpan"></span>
-                </div>
-                <div class="form-floating mb-3">
-                    <input asp-for="Email" class="form-control" placeholder="Email" type="email" />
-                    <label asp-for="Email" class="control-label">Email</label>
-                    <span asp-validation-for="Email" class="text-danger" id="emailSpan"></span>
                 </div>
                 <div class="form-floating mb-3">
                     <select asp-for="SubdivisionId" asp-items="@(new SelectList(Model.Subdivisions,
@@ -59,20 +54,27 @@
                     <label asp-for="PeoplePartnerId">People partner</label>
                     <span asp-validation-for="PeoplePartnerId" class="text-danger" id="peoplePartnerIdSpan"></span>
                 </div>
+                @if(User.IsInRole("Administrator") || User.IsInRole("Project Manager"))
+                {
+                    <div class="form-floating mb-3">
+                        <select asp-for="ProjectId" asp-items="@(new SelectList(Model.Projects,
+                        nameof(Project.Id),
+                        nameof(Project.ProjectType)))"
+                                class="form-select form-select-md">
+                            <option value="0">Please select one</option>
+                        </select>
+                        <label asp-for="ProjectId">Project</label>
+                        <span asp-validation-for="ProjectId" class="text-danger" id="projectIdSpan"></span>
+                    </div>
+                }
                 <div class="form-floating mb-3">
                     <input asp-for="OutOfOfficeBalance" class="form-control" placeholder="Out of office balance" />
                     <label asp-for="OutOfOfficeBalance" class="control-label">Out of office balance</label>
                     <span asp-validation-for="OutOfOfficeBalance" class="text-danger" id="outOfOfficeBalanceSpan"></span>
                 </div>
-                <button id="employeeSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Create</button>
+                <button id="employeeSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Edit</button>
             </form>
         </div>
     </div>
 </div>
 
-@section Scripts
-{
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}

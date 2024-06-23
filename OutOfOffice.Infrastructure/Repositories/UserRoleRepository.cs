@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using OutOfOffice.Application.ApplicationUser;
 using OutOfOffice.Domain.Interfaces;
 using OutOfOffice.Domain.Models;
 
@@ -9,11 +10,15 @@ namespace OutOfOffice.Infrastructure.Repositories
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IUserContextService _userContextService;
 
-        public UserRoleRepository(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
+        public UserRoleRepository(UserManager<IdentityUser> userManager, 
+            RoleManager<IdentityRole> roleManager,
+            IUserContextService userContextService)
         {
             _userManager = userManager;
             _roleManager = roleManager;
+            _userContextService = userContextService;
         }
 
         public async Task<IEnumerable<UserDto>> GetAllUsersWithRolesAsync()
@@ -73,7 +78,7 @@ namespace OutOfOffice.Infrastructure.Repositories
             await _userManager.AddToRoleAsync(user, role.Name ?? "");
         }
 
-        public async Task<string> GetRoleByUserId(string userId)
+        public async Task<string> GetRoleByUserIdAsync(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
 
@@ -85,6 +90,11 @@ namespace OutOfOffice.Infrastructure.Repositories
             var currentRoles = await _userManager.GetRolesAsync(user);
 
             var role = currentRoles.FirstOrDefault();
+
+            if (role == null)
+            {
+                return "";
+            }
 
             var identityRole = await _roleManager.FindByNameAsync(role!);
 

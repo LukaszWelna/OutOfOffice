@@ -14,5 +14,10 @@ namespace OutOfOffice.Application.Services
         public Task CreateEmployeeAsync(CreateEmployeeDto createEmployeeDto);
         public Task CreateEmployeeProjectAsync(int projectId);
         public Task<OutOfOffice.Domain.Entities.Employee?> GetEmployeeByEmailAsync(string email);
+        public Task<List<GetEmployeeDto>> GetAllEmployeesAsync(string searchPhrase, string sortOrder);
+        public Task<EditEmployeeDto> GetEditEmployeeDtoByIdAsync(int id);
+        public Task EditEmployeeById(EditEmployeeDto editEmployeeDto);
+        public Task<EditEmployeeDto> GetEditEmployeeDtoAfterValidationAsync(EditEmployeeDto editEmployeeDto);
+
     }
 }

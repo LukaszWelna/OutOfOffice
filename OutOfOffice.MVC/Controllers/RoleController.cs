@@ -44,9 +44,10 @@ namespace OutOfOffice.MVC.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetRoleByUserId(string id)
+        [Route("Role/GetUserRoleById/{id}")]
+        public async Task<IActionResult> GetUserRoleById(string id)
         {
-            var data = await _userRoleService.GetRoleByUserId(id);
+            var data = await _userRoleService.GetRoleByUserIdAsync(id);
 
             return Ok(data);
         }
