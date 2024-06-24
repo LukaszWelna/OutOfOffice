@@ -1,0 +1,10 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject UserManager<IdentityUser> UserManager
+
+
+@{
+    ViewData["Title"] = "Leave requests";
+}
+
+<a class="link mb-3" asp-controller="LeaveRequest" asp-action="Create">Create leave request</a>
