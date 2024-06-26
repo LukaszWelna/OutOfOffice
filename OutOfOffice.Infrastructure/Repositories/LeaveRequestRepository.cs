@@ -1,4 +1,6 @@
-﻿using OutOfOffice.Domain.Entities;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using OutOfOffice.Domain.Entities;
 using OutOfOffice.Domain.Interfaces;
 using OutOfOffice.Infrastructure.Persistence;
 using System;
@@ -22,6 +24,55 @@ namespace OutOfOffice.Infrastructure.Repositories
         {
             _dbContext.Add(leaveRequest);
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<List<LeaveRequest>> GetAllLeaveRequestsAsync(string searchPhrase, string sortOrder)
+        {
+            var leaveRequests = _dbContext.LeaveRequests
+                .Include(l => l.Employee)
+                .Where(l => searchPhrase == null || l.Employee.FullName.ToLower().Contains(searchPhrase.ToLower()));
+
+            switch (sortOrder)
+            {
+                case "IdDesc":
+                    leaveRequests = leaveRequests.OrderByDescending(l => l.Id);
+                    break;
+                case "employeeAsc":
+                    leaveRequests = leaveRequests.OrderBy(l => l.Employee.FullName);
+                    break;
+                case "employeeDesc":
+                    leaveRequests = leaveRequests.OrderByDescending(l => l.Employee.FullName);
+                    break;
+                case "absenceReasonAsc":
+                    leaveRequests = leaveRequests.OrderBy(l => l.AbsenceReason);
+                    break;
+                case "absenceReasonDesc":
+                    leaveRequests = leaveRequests.OrderByDescending(l => l.AbsenceReason);
+                    break;
+                case "startDateAsc":
+                    leaveRequests = leaveRequests.OrderBy(l => l.StartDate);
+                    break;
+                case "startDateDesc":
+                    leaveRequests = leaveRequests.OrderByDescending(l => l.StartDate);
+                    break;
+                case "endDateAsc":
+                    leaveRequests = leaveRequests.OrderBy(l => l.EndDate);
+                    break;
+                case "endDateDesc":
+                    leaveRequests = leaveRequests.OrderByDescending(l => l.EndDate);
+                    break;
+                case "statusAsc":
+                    leaveRequests = leaveRequests.OrderBy(l => l.Status);
+                    break;
+                case "statusDesc":
+                    leaveRequests = leaveRequests.OrderByDescending(l => l.Status);
+                    break;
+                default:
+                    leaveRequests = leaveRequests.OrderBy(l => l.Id);
+                    break;
+            }
+
+            return await leaveRequests.ToListAsync();
         }
     }
 }

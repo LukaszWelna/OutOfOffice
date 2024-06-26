@@ -17,9 +17,21 @@ namespace OutOfOffice.MVC.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index([FromQuery] string searchPhrase, [FromQuery] string sortOrder)
         {
-            return View();
+            ViewData["IdSortParam"] = String.IsNullOrEmpty(sortOrder) ? "IdDesc" : "";
+            ViewData["EmployeeSortParam"] = sortOrder == "employeeAsc" ? "employeeDesc" : "employeeAsc";
+            ViewData["AbsenceReasonSortParam"] = sortOrder == "absenceReasonAsc" ? "absenceReasonDesc" : "absenceReasonAsc";
+            ViewData["StartDateSortParam"] = sortOrder == "startDateAsc" ? "startDateDesc" : "startDateAsc";
+            ViewData["EndDateSortParam"] = sortOrder == "endDateAsc" ? "endDateDesc" : "endDateAsc";
+            ViewData["StatusSortParam"] = sortOrder == "statusAsc" ? "statusDesc" : "statusAsc";
+
+            ViewData["CurrentSearchPhrase"] = searchPhrase;
+            ViewData["CurrentSortOrder"] = sortOrder;
+
+            var allLeaveRequests = await _leaveRequestService.GetAllLeaveRequestsAsync(searchPhrase, sortOrder);
+
+            return View(allLeaveRequests);
         }
 
         [HttpGet]

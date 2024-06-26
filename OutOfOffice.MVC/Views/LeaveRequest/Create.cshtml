@@ -26,13 +26,13 @@
                 </div>
                 <div class="form-floating mb-3">
                     <input asp-for="StartDate" type="date" class="form-control" placeholder="Start date"
-                           value="@Model.StartDate.ToString("yyyy-MM-dd")" min="2000-01-01" max="@today">
+                           value="@Model.StartDate.ToString("yyyy-MM-dd")" min="2000-01-01">
                     <label asp-for="StartDate" class="control-label">Start date</label>
                     <span asp-validation-for="StartDate" class="text-danger" id="startDateSpan"></span>
                 </div>
                 <div class="form-floating mb-3">
                     <input asp-for="EndDate" type="date" class="form-control" placeholder="End date"
-                           value="@Model.EndDate.ToString("yyyy-MM-dd")" min="2000-01-01" max="@today">
+                           value="@Model.EndDate.ToString("yyyy-MM-dd")" min="2000-01-01">
                     <label asp-for="EndDate" class="control-label">End date</label>
                     <span asp-validation-for="EndDate" class="text-danger" id="endDateSpan"></span>
                 </div>

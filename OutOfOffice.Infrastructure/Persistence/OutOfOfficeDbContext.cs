@@ -64,8 +64,8 @@ namespace OutOfOffice.Infrastructure.Persistence
             modelBuilder.Entity<LeaveRequest>(eb =>
             {
                 eb.HasOne(l => l.Employee)
-                .WithOne(e => e.LeaveRequest)
-                .HasForeignKey<LeaveRequest>(l => l.EmployeeId)
+                .WithMany(e => e.LeaveRequests)
+                .HasForeignKey(l => l.EmployeeId)
                 .OnDelete(DeleteBehavior.NoAction);
 
                 eb.Property(l => l.AbsenceReason)

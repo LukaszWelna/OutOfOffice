@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.Data.SqlClient;
 using OutOfOffice.Application.ApplicationUser;
 using OutOfOffice.Application.Employee;
 using OutOfOffice.Application.LeaveRequest;
@@ -63,6 +64,15 @@ namespace OutOfOffice.Application.Services
             createLeaveRequestDto.AbsenceReasons = AbsenceReasonList.AbsenceReasons;
 
             return createLeaveRequestDto;
+        }
+
+        public async Task<List<GetLeaveRequestDto>> GetAllLeaveRequestsAsync(string searchPhrase, string sortOrder)
+        {
+            var leaveRequests = await _leaveRequestRepository.GetAllLeaveRequestsAsync(searchPhrase, sortOrder);
+
+            var leaveRequestsDto = _mapper.Map<List<GetLeaveRequestDto>>(leaveRequests);
+
+            return leaveRequestsDto;
         }
     }
 }
