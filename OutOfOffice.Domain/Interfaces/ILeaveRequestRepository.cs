@@ -12,5 +12,7 @@ namespace OutOfOffice.Domain.Interfaces
     {
         public Task CreateLeaveRequestAsync(LeaveRequest leaveRequest);
         public Task<List<LeaveRequest>> GetAllLeaveRequestsAsync(string searchPhrase, string sortOrder);
+        public Task<LeaveRequest> GetLeaveRequestByIdAsync(int id);
+        public Task Commit();
     }
 }

@@ -7,15 +7,13 @@ using System.Threading.Tasks;
 
 namespace OutOfOffice.Application.LeaveRequest
 {
-    public class GetLeaveRequestDto
+    public class EditLeaveRequestDto
     {
         public int Id { get; set; }
-        public string Employee { get; set; } = default!;
-        public string AbsenceReason { get; set; } = default!;
+        public int AbsenceReasonId { get; set; }
+        public List<AbsenceReason> AbsenceReasons { get; set; } = new List<AbsenceReason>();
         public DateOnly StartDate { get; set; }
         public DateOnly EndDate { get; set; }
         public string? Comment { get; set; }
-        public string Status { get; set; } = default!;
-        public string EmployeeEmail { get; set; } = default!;
     }
 }

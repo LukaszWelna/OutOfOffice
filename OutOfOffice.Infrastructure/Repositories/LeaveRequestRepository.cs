@@ -74,5 +74,21 @@ namespace OutOfOffice.Infrastructure.Repositories
 
             return await leaveRequests.ToListAsync();
         }
+
+        public async Task<LeaveRequest> GetLeaveRequestByIdAsync(int id)
+        {
+            var leaveRequest = await _dbContext.LeaveRequests
+                .FirstOrDefaultAsync(l => l.Id == id);
+
+            if (leaveRequest == null)
+            {
+                throw new InvalidOperationException("Leave request with specified id doesn't exist.");
+            }
+
+            return leaveRequest;
+        }
+
+        public async Task Commit()
+            => await _dbContext.SaveChangesAsync();
     }
 }

@@ -1,0 +1,47 @@
+﻿@using OutOfOffice.Domain.Entities
+@using OutOfOffice.Application.LeaveRequest
+
+@model EditLeaveRequestDto
+
+@{
+    ViewData["Title"] = "Edit leave request";
+}
+
+<div class="container col-xl-10 col-xxl-10 px-4 py-5">
+    <div class="row align-items-center">
+        <div class="col-md-10 mx-auto col-lg-6 p-4 rounded-3 form-column">
+            <form id="leaveRequestForm" asp-action="Edit" method="post">
+                <h2 class="form-header">Edit leave request</h2>
+                <hr />
+                <div class="form-floating mb-3">
+                    <select asp-for="AbsenceReasonId" asp-items="@(new SelectList(Model.AbsenceReasons,
+                        nameof(AbsenceReason.Id),
+                        nameof(AbsenceReason.Name)))"
+                            class="form-select form-select-md">
+                        <option value="0">Please select one</option>
+                    </select>
+                    <label asp-for="AbsenceReasonId">Absence reason</label>
+                    <span asp-validation-for="AbsenceReasonId" class="text-danger" id="absenceReasonIdSpan"></span>
+                </div>
+                <div class="form-floating mb-3">
+                    <input asp-for="StartDate" type="date" class="form-control" placeholder="Start date"
+                           value="@Model.StartDate.ToString("yyyy-MM-dd")" min="2000-01-01">
+                    <label asp-for="StartDate" class="control-label">Start date</label>
+                    <span asp-validation-for="StartDate" class="text-danger" id="startDateSpan"></span>
+                </div>
+                <div class="form-floating mb-3">
+                    <input asp-for="EndDate" type="date" class="form-control" placeholder="End date"
+                           value="@Model.EndDate.ToString("yyyy-MM-dd")" min="2000-01-01">
+                    <label asp-for="EndDate" class="control-label">End date</label>
+                    <span asp-validation-for="EndDate" class="text-danger" id="endDateSpan"></span>
+                </div>
+                <div class="form-floating mb-3">
+                    <textarea asp-for="Comment" class="form-control" placeholder="Comment"></textarea>
+                    <label asp-for="Comment">Comment</label>
+                    <span asp-validation-for="Comment" class="text-danger" id="commentIdSpan"></span>
+                </div>
+                <button id="leaveRequestSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Edit</button>
+            </form>
+        </div>
+    </div>
+</div>
