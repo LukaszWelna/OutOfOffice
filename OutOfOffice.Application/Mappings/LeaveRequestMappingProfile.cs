@@ -14,6 +14,8 @@ namespace OutOfOffice.Application.Mappings
         public LeaveRequestMappingProfile()
         {
             CreateMap<CreateLeaveRequestDto, OutOfOffice.Domain.Entities.LeaveRequest>();
+            CreateMap<OutOfOffice.Domain.Entities.LeaveRequest, GetLeaveRequestDto>()
+                .ForMember(l => l.Employee, opt => opt.MapFrom(src => src.Employee.FullName));
         }
     }
 }

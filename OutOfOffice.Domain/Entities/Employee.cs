@@ -19,7 +19,7 @@ namespace OutOfOffice.Domain.Entities
         public int OutOfOfficeBalance { get; set; }
         public byte[]? Photo { get; set; }
         public ApprovalRequest ApprovalRequest { get; set; } = default!;
-        public LeaveRequest LeaveRequest { get; set; } = default!;
+        public List<LeaveRequest> LeaveRequests { get; set; } = new List<LeaveRequest>();
         public List<EmployeeProject> EmployeeProjects { get; set; } = new List<EmployeeProject>();
     }
 }

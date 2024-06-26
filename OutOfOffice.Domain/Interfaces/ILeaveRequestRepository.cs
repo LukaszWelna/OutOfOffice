@@ -1,4 +1,5 @@
-﻿using OutOfOffice.Domain.Entities;
+﻿using Microsoft.Data.SqlClient;
+using OutOfOffice.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,6 @@ namespace OutOfOffice.Domain.Interfaces
     public interface ILeaveRequestRepository
     {
         public Task CreateLeaveRequestAsync(LeaveRequest leaveRequest);
+        public Task<List<LeaveRequest>> GetAllLeaveRequestsAsync(string searchPhrase, string sortOrder);
     }
 }
