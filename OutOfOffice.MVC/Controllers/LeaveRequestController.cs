@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using OutOfOffice.Application.Employee;
 using OutOfOffice.Application.LeaveRequest;
@@ -10,10 +11,13 @@ namespace OutOfOffice.MVC.Controllers
     public class LeaveRequestController : Controller
     {
         private readonly ILeaveRequestService _leaveRequestService;
+        private readonly IApprovalRequestService _approvalRequestService;
 
-        public LeaveRequestController(ILeaveRequestService leaveRequestService)
+        public LeaveRequestController(ILeaveRequestService leaveRequestService, 
+            IApprovalRequestService approvalRequestService)
         {
             _leaveRequestService = leaveRequestService;
+            _approvalRequestService = approvalRequestService;
         }
 
         [HttpGet]
@@ -42,6 +46,7 @@ namespace OutOfOffice.MVC.Controllers
             return View(createLeaveRequestDto);
         }
 
+        [Authorize(Roles = "Employee, HR Manager, Project Manager")]
         [HttpPost]
         public async Task<IActionResult> Create(CreateLeaveRequestDto createLeaveRequestDto)
         {
@@ -49,6 +54,7 @@ namespace OutOfOffice.MVC.Controllers
             if (!ModelState.IsValid)
             {
                 var createLeaveRequestDtoAfterValidation = _leaveRequestService.GetLeaveRequestDtoAfterValidation(createLeaveRequestDto);
+                
                 return View(createLeaveRequestDtoAfterValidation);
             }
             
@@ -57,6 +63,55 @@ namespace OutOfOffice.MVC.Controllers
             this.SetNotification("success", "Leave request added successfully");
 
             return RedirectToAction(nameof(Create));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var editLeaveRequestDto = await _leaveRequestService.GetEditLeaveRequestDtoByIdAsync(id);
+
+            return View(editLeaveRequestDto);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(EditLeaveRequestDto editLeaveRequestDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                var editLeaveRequestDtoAfterValidation = _leaveRequestService.GetEditLeaveRequestDtoAfterValidation(editLeaveRequestDto);
+                
+                return View(editLeaveRequestDtoAfterValidation);
+            }
+
+            await _leaveRequestService.EditLeaveRequestById(editLeaveRequestDto);
+
+            this.SetNotification("success", "Leave request edited successfully");
+
+            return RedirectToAction("Index", "LeaveRequest");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Submit(int id)
+        {
+            await _leaveRequestService.SubmitLeaveRequestByIdAsync(id);
+
+            await _approvalRequestService.CreateApprovalRequestAsync(id);
+
+            this.SetNotification("success", "Leave request submitted successfully");
+
+            return RedirectToAction("Index", "LeaveRequest");
+        }
+        
+        [HttpPost]
+        public async Task<IActionResult> Cancel(int id)
+        {
+            await _leaveRequestService.CancelLeaveRequestByIdAsync(id);
+
+            await _approvalRequestService.DeleteApprovalRequestAsync(id);
+
+            this.SetNotification("success", "Leave request cancelled successfully");
+
+            return RedirectToAction("Index", "LeaveRequest");
         }
     }
 }

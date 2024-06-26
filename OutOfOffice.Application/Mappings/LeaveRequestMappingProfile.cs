@@ -15,7 +15,11 @@ namespace OutOfOffice.Application.Mappings
         {
             CreateMap<CreateLeaveRequestDto, OutOfOffice.Domain.Entities.LeaveRequest>();
             CreateMap<OutOfOffice.Domain.Entities.LeaveRequest, GetLeaveRequestDto>()
-                .ForMember(l => l.Employee, opt => opt.MapFrom(src => src.Employee.FullName));
+                .ForMember(l => l.Employee, opt => opt.MapFrom(src => src.Employee.FullName))
+                .ForMember(l => l.EmployeeEmail, opt => opt.MapFrom(src => src.Employee.Email));
+            CreateMap<OutOfOffice.Domain.Entities.LeaveRequest, EditLeaveRequestDto>()
+                .ForMember(l => l.AbsenceReasonId, opt => opt.MapFrom(src =>
+                AbsenceReasonList.AbsenceReasons.FirstOrDefault(a => a.Name == src.AbsenceReason)!.Id));
         }
     }
 }

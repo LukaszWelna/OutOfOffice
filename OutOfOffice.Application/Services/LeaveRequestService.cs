@@ -74,5 +74,53 @@ namespace OutOfOffice.Application.Services
 
             return leaveRequestsDto;
         }
+
+        public async Task<EditLeaveRequestDto> GetEditLeaveRequestDtoByIdAsync(int id)
+        {
+            var leaveRequest = await _leaveRequestRepository.GetLeaveRequestByIdAsync(id);
+
+            var leaveRequestDto = _mapper.Map<EditLeaveRequestDto>(leaveRequest);
+
+            leaveRequestDto.AbsenceReasons = AbsenceReasonList.AbsenceReasons;
+
+            return leaveRequestDto;
+        }
+
+        public async Task EditLeaveRequestById(EditLeaveRequestDto editLeaveRequestDto)
+        {
+            var leaveRequest = await _leaveRequestRepository.GetLeaveRequestByIdAsync(editLeaveRequestDto.Id);
+
+            leaveRequest.AbsenceReason = AbsenceReasonList.AbsenceReasons.FirstOrDefault(a => a.Id == editLeaveRequestDto.AbsenceReasonId)?.Name ?? "";
+            leaveRequest.StartDate = editLeaveRequestDto.StartDate;
+            leaveRequest.EndDate = editLeaveRequestDto.EndDate;
+            leaveRequest.Comment = editLeaveRequestDto.Comment;
+            
+            await _leaveRequestRepository.Commit();
+        }
+
+        public EditLeaveRequestDto GetEditLeaveRequestDtoAfterValidation(EditLeaveRequestDto editLeaveRequestDto)
+        {
+            editLeaveRequestDto.AbsenceReasons = AbsenceReasonList.AbsenceReasons;
+
+            return editLeaveRequestDto;
+        }
+
+        public async Task SubmitLeaveRequestByIdAsync(int id)
+        {
+            var leaveRequest = await _leaveRequestRepository.GetLeaveRequestByIdAsync(id);
+
+            leaveRequest.Status = "Submitted";
+
+            await _leaveRequestRepository.Commit();
+        }
+
+        public async Task CancelLeaveRequestByIdAsync(int id)
+        {
+            var leaveRequest = await _leaveRequestRepository.GetLeaveRequestByIdAsync(id);
+
+            leaveRequest.Status = "Cancelled";
+
+            await _leaveRequestRepository.Commit();
+        }
     }
 }

@@ -12,7 +12,7 @@
 <div class="container col-xl-12 col-xxl-12">
     <div class="row align-items-center">
         <div class="col-12 table-container p-3 rounded-2 mb-4">
-            <h3 class="text-center mb-3">Employees</h3>
+            <h3 class="text-center mb-3">Leave requests</h3>
             <form asp-action="Index" method="get">
                 <div>
                     @if (User.IsInRole("Employee") || User.IsInRole("HR Manager") || User.IsInRole("Project Manager"))
@@ -22,7 +22,7 @@
                         </div>
                     }
                     <div class="d-flex align-items-center mb-3">
-                        Find by Full Name:
+                        Find by Employee:
                         <input class="mx-1" type="text" name="SearchPhrase" value="@ViewData["CurrentSearchPhrase"]" />
                         <button id="filterSubmit" type="submit" class="btn btn-secondary me-1">Filter</button> |
                         <a class="link mx-1" asp-action="Index">Back to Full List</a>
@@ -58,6 +58,7 @@
                                     <a asp-action="Index" asp-route-sortOrder="@ViewData["StatusSortParam"]" asp-route-searchPhrase="@ViewData["CurrentSearchPhrase"]">Status</a>
                                 </th>
                                 <th>Edit</th>
+                                <th>Submit</th>
                             </tr>
                             @foreach (var leaveRequest in Model)
                             {
@@ -83,9 +84,27 @@
                                     <td>
                                         @leaveRequest.Status
                                     </td>
+                                    @if (leaveRequest.EmployeeEmail == User.Identity?.Name || User.IsInRole("Administrator"))
+                                    {
                                     <td>
-                                        <a class="bi bi-pencil mx-1" asp-controller="LeaveRequest" asp-action="Edit" asp-route-id="@leaveRequest.Id"></a>
+                                            <a class="bi bi-pencil mx-1" asp-controller="LeaveRequest" asp-action="Edit" asp-route-id="@leaveRequest.Id"></a>
                                     </td>
+                                        <td>
+                                            @if (leaveRequest.Status != "Submitted")
+                                            {
+                                                <form class="icon-form" asp-controller="LeaveRequest" asp-action="Submit" asp-route-id="@leaveRequest.Id" method="post">
+                                                    <button type="submit">Submit</button>
+                                                </form>
+                                                
+                                            }
+                                            else
+                                            {
+                                                <form class="icon-form" asp-controller="LeaveRequest" asp-action="Cancel" asp-route-id="@leaveRequest.Id" method="post">
+                                                    <button type="submit">Cancel</button>
+                                                </form>
+                                            }
+                                        </td>
+                                    }
                                 </tr>
                             }
                         </tbody>

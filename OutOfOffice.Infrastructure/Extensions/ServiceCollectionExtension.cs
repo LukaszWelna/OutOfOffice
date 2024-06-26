@@ -34,6 +34,7 @@ namespace OutOfOffice.Infrastructure.Extensions
             services.AddScoped<IUserRoleRepository, UserRoleRepository>();
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             services.AddScoped<ILeaveRequestRepository, LeaveRequestRepository>();
+            services.AddScoped<IApprovalRequestRepository, ApprovalRequestRepository>();
 
         }
     }
