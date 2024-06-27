@@ -1,0 +1,42 @@
+﻿@using OutOfOffice.Application.ApprovalRequest
+@using OutOfOffice.Domain.Entities
+
+@model EditApprovalRequestDto
+
+@{
+    ViewData["Title"] = "Edit approval request";
+}
+
+<div class="container col-xl-10 col-xxl-10 px-4 py-5">
+    <div class="row align-items-center">
+        <div class="col-md-10 mx-auto col-lg-6 p-4 rounded-3 form-column">
+            <form id="leaveRequestForm" asp-action="Edit" method="post">
+                <h2 class="form-header">Edit approval request</h2>
+                <hr />
+                <div class="form-floating mb-3">
+                    <select asp-for="StatusId" asp-items="@(new SelectList(Model.Statuses,
+                        nameof(ApprovalRequestStatus.Id),
+                        nameof(ApprovalRequestStatus.Name)))"
+                            class="form-select form-select-md">
+                        <option value="0">Please select one</option>
+                    </select>
+                    <label asp-for="StatusId">Status</label>
+                    <span asp-validation-for="StatusId" class="text-danger" id="statusIdSpan"></span>
+                </div>
+                <div class="form-floating mb-3">
+                    <textarea asp-for="Comment" class="form-control" placeholder="Comment"></textarea>
+                    <label asp-for="Comment">Comment</label>
+                    <span asp-validation-for="Comment" class="text-danger" id="commentIdSpan"></span>
+                </div>
+                <button id="approvalRequestSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Edit</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+                {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
