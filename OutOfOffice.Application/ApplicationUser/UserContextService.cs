@@ -39,8 +39,9 @@ namespace OutOfOffice.Application.ApplicationUser
 
             var id = user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
             var email = user.FindFirst(c => c.Type == ClaimTypes.Email)!.Value;
+            var role = user.FindFirst(c => c.Type == ClaimTypes.Role)!.Value;
 
-            return new CurrentUser(id, email);
+            return new CurrentUser(id, email, role);
         }
     }
 }

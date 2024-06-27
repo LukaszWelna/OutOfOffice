@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OutOfOffice.Application.ApprovalRequest;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,5 +11,6 @@ namespace OutOfOffice.Application.Services
     {
         public Task CreateApprovalRequestAsync(int leaveRequestId);
         public Task DeleteApprovalRequestAsync(int leaveRequestId);
+        public Task<List<GetApprovalRequestDto>> GetAllApprovalRequestsAsync();
     }
 }
