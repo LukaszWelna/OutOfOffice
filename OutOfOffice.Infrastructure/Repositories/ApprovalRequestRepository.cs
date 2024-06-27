@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using OutOfOffice.Application.ApplicationUser;
 using OutOfOffice.Application.Services;
 using OutOfOffice.Domain.Entities;
 using OutOfOffice.Domain.Interfaces;
@@ -14,10 +15,12 @@ namespace OutOfOffice.Infrastructure.Repositories
     public class ApprovalRequestRepository : IApprovalRequestRepository
     {
         private readonly OutOfOfficeDbContext _dbContext;
+        private readonly IUserContextService _userContextService;
 
-        public ApprovalRequestRepository(OutOfOfficeDbContext dbContext)
+        public ApprovalRequestRepository(OutOfOfficeDbContext dbContext, IUserContextService userContextService)
         {
             _dbContext = dbContext;
+            _userContextService = userContextService;
         }
 
         public async Task CreateApprovalRequestAsync(ApprovalRequest approvalRequest)
@@ -40,6 +43,26 @@ namespace OutOfOffice.Infrastructure.Repositories
             _dbContext.ApprovalRequests.Remove(approvalRequest);
 
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<List<ApprovalRequest>> GetAllApprovalRequestsAsync()
+        {
+            var loggedUser = _userContextService.GetCurrentUser();
+
+            var approvalRequests = _dbContext.ApprovalRequests
+            .Include(a => a.LeaveRequest)
+            .ThenInclude(l => l.Employee)
+            .ThenInclude(e => e.EmployeeProjects)
+            .ThenInclude(ep => ep.Project)
+            .AsQueryable();
+
+            if (loggedUser.Role == "HR Manager")
+            {
+                approvalRequests = approvalRequests.Where(a => a.LeaveRequest.Employee.PeoplePartner != null &&
+                    a.LeaveRequest.Employee.PeoplePartner.Email == loggedUser.Email);
+            }
+
+            return await approvalRequests.ToListAsync();
         }
     }
 }

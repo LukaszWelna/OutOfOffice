@@ -1,0 +1,67 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using OutOfOffice.Application.ApprovalRequest
+
+
+@inject UserManager<IdentityUser> UserManager
+@model List<GetApprovalRequestDto>
+
+
+@{
+    ViewData["Title"] = "Approval requests";
+}
+
+<div class="container col-xl-12 col-xxl-12">
+    <div class="row align-items-center">
+        <div class="col-12 table-container p-3 rounded-2 mb-4">
+            <h3 class="text-center mb-3">Approval requests</h3>
+            @if (Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-borderless mb-0 table-balance">
+                        <tbody>
+                            <tr>
+                                <th>
+                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["EmployeeSortParam"]" asp-route-searchPhrase="@ViewData["CurrentSearchPhrase"]">Leave request id</a>
+                                </th>
+                                <th>
+                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["AbsenceReasonSortParam"]" asp-route-searchPhrase="@ViewData["CurrentSearchPhrase"]">Approver</a>
+                                </th>
+                                <th>
+                                    Comment
+                                </th>
+                                <th>
+                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["StatusSortParam"]" asp-route-searchPhrase="@ViewData["CurrentSearchPhrase"]">Status</a>
+                                </th>
+                                <th>Edit</th>
+                            </tr>
+                            @foreach (var approvalRequest in Model)
+                            {
+                                <tr class="border-bottom">
+                                    <td>
+                                        @approvalRequest.LeaveRequestId
+                                    </td>
+                                    <td>
+                                        @approvalRequest.ApproverName
+                                    </td>
+                                    <td>
+                                        @approvalRequest.Comment
+                                    </td>
+                                    <td>
+                                        @approvalRequest.Status
+                                    </td>
+                                    <td>
+                                        <a class="bi bi-pencil mx-1" asp-controller="ApprovalRequest" asp-action="Edit" asp-route-id="@approvalRequest.Id"></a>
+                                    </td>  
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <p class="text-center">No approval requests to show.</p>
+            }
+        </div>
+    </div>
+</div>

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using OutOfOffice.Application.ApplicationUser;
+using OutOfOffice.Application.ApprovalRequest;
 using OutOfOffice.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -40,6 +41,15 @@ namespace OutOfOffice.Application.Services
         public async Task DeleteApprovalRequestAsync(int leaveRequestId)
         {
             await _approvalRequestRepository.DeleteApprovalRequestAsync(leaveRequestId);
+        }
+
+        public async Task<List<GetApprovalRequestDto>> GetAllApprovalRequestsAsync()
+        {
+            var approvalRequests = await _approvalRequestRepository.GetAllApprovalRequestsAsync();
+
+            var approvalRequestDtos = _mapper.Map<List<GetApprovalRequestDto>>(approvalRequests);
+
+            return approvalRequestDtos;
         }
     }
 }
