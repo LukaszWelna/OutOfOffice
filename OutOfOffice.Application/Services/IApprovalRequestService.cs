@@ -11,6 +11,9 @@ namespace OutOfOffice.Application.Services
     {
         public Task CreateApprovalRequestAsync(int leaveRequestId);
         public Task DeleteApprovalRequestAsync(int leaveRequestId);
-        public Task<List<GetApprovalRequestDto>> GetAllApprovalRequestsAsync();
+        public Task<List<GetApprovalRequestDto>> GetAllApprovalRequestsAsync(int searchPhrase, string sortOrder);
+        public Task<EditApprovalRequestDto> GetEditApprovalRequestDtoByIdAsync(int id);
+        public Task EditApprovalRequestById(EditApprovalRequestDto editApprovalRequestDto);
+        public EditApprovalRequestDto GetEditApprovalRequestDtoAfterValidation(EditApprovalRequestDto editApprovalRequestDto);
     }
 }

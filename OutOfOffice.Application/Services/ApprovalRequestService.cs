@@ -13,18 +13,21 @@ namespace OutOfOffice.Application.Services
     public class ApprovalRequestService : IApprovalRequestService
     {
         private readonly IApprovalRequestRepository _approvalRequestRepository;
-        private readonly IEmployeeRepository _employeeRepository;
+        private readonly ILeaveRequestRepository _leaveRequestRepository;
         private readonly IUserContextService _userContextService;
+        private readonly IEmployeeRepository _employeeRepository;
         private readonly IMapper _mapper;
 
         public ApprovalRequestService(IApprovalRequestRepository approvalRequestRepository,
-            IEmployeeRepository employeeRepository,
+            ILeaveRequestRepository leaveRequestRepository,
             IUserContextService userContextService,
+            IEmployeeRepository employeeRepository,
             IMapper mapper)
         {
             _approvalRequestRepository = approvalRequestRepository;
-            _employeeRepository = employeeRepository;
+            _leaveRequestRepository = leaveRequestRepository;
             _userContextService = userContextService;
+            _employeeRepository = employeeRepository;
             _mapper = mapper;
         }
 
@@ -43,13 +46,54 @@ namespace OutOfOffice.Application.Services
             await _approvalRequestRepository.DeleteApprovalRequestAsync(leaveRequestId);
         }
 
-        public async Task<List<GetApprovalRequestDto>> GetAllApprovalRequestsAsync()
+        public async Task<List<GetApprovalRequestDto>> GetAllApprovalRequestsAsync(int searchPhrase, string sortOrder)
         {
-            var approvalRequests = await _approvalRequestRepository.GetAllApprovalRequestsAsync();
-
+            var approvalRequests = await _approvalRequestRepository.GetAllApprovalRequestsAsync(searchPhrase, sortOrder);
+            
             var approvalRequestDtos = _mapper.Map<List<GetApprovalRequestDto>>(approvalRequests);
 
             return approvalRequestDtos;
+        }
+
+        public async Task<EditApprovalRequestDto> GetEditApprovalRequestDtoByIdAsync(int id)
+        {
+            var approvalRequest = await _approvalRequestRepository.GetApprovalRequestByIdAsync(id);
+
+            var editApprovalRequestDto = _mapper.Map<EditApprovalRequestDto>(approvalRequest);
+
+            return editApprovalRequestDto;
+        }
+
+        public async Task EditApprovalRequestById(EditApprovalRequestDto editApprovalRequestDto)
+        {
+            var approvalRequest = await _approvalRequestRepository.GetApprovalRequestByIdAsync(editApprovalRequestDto.Id);
+
+            var leaveRequest = await _leaveRequestRepository.GetLeaveRequestByIdAsync(approvalRequest.LeaveRequestId);
+
+            var loggedUser = _userContextService.GetCurrentUser();
+
+            var employee = await _employeeRepository.GetEmployeeByEmailAsync(loggedUser.Email);
+
+            if (employee == null)
+            {
+                throw new InvalidOperationException("Invalid user id.");
+            }
+            
+            approvalRequest.ApproverId = employee.Id;
+            approvalRequest.Status = ApprovalRequestStatusList.ApprovalRequestStatuses.FirstOrDefault(s => s.Id == editApprovalRequestDto.StatusId)!.Name;
+            approvalRequest.Comment = editApprovalRequestDto.Comment;
+
+            leaveRequest.Status = approvalRequest.Status;
+            leaveRequest.Comment = approvalRequest.Comment;
+
+            await _approvalRequestRepository.Commit();
+        }
+
+        public EditApprovalRequestDto GetEditApprovalRequestDtoAfterValidation(EditApprovalRequestDto editApprovalRequestDto)
+        {
+            editApprovalRequestDto.Statuses = ApprovalRequestStatusList.ApprovalRequestStatuses;
+
+            return editApprovalRequestDto;
         }
     }
 }

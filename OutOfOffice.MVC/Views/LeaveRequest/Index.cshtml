@@ -87,17 +87,20 @@
                                     @if (leaveRequest.EmployeeEmail == User.Identity?.Name || User.IsInRole("Administrator"))
                                     {
                                     <td>
-                                            <a class="bi bi-pencil mx-1" asp-controller="LeaveRequest" asp-action="Edit" asp-route-id="@leaveRequest.Id"></a>
+                                            @if (leaveRequest.Status != "Approved" && leaveRequest.Status != "Rejected")
+                                            {
+                                                <a class="bi bi-pencil mx-1" asp-controller="LeaveRequest" asp-action="Edit" asp-route-id="@leaveRequest.Id"></a>
+                                            }
                                     </td>
                                         <td>
-                                            @if (leaveRequest.Status != "Submitted")
+                                            @if (leaveRequest.Status == "New" || leaveRequest.Status == "Cancelled")
                                             {
                                                 <form class="icon-form" asp-controller="LeaveRequest" asp-action="Submit" asp-route-id="@leaveRequest.Id" method="post">
                                                     <button type="submit">Submit</button>
                                                 </form>
                                                 
                                             }
-                                            else
+                                            else if (leaveRequest.Status == "Submitted")
                                             {
                                                 <form class="icon-form" asp-controller="LeaveRequest" asp-action="Cancel" asp-route-id="@leaveRequest.Id" method="post">
                                                     <button type="submit">Cancel</button>

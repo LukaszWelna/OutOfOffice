@@ -11,6 +11,8 @@ namespace OutOfOffice.Domain.Interfaces
     {
         public Task CreateApprovalRequestAsync(ApprovalRequest approvalRequest);
         public Task DeleteApprovalRequestAsync(int leaveRequestId);
-        public Task<List<OutOfOffice.Domain.Entities.ApprovalRequest>> GetAllApprovalRequestsAsync();
+        public Task<List<OutOfOffice.Domain.Entities.ApprovalRequest>> GetAllApprovalRequestsAsync(int searchPhrase, string sortOrder);
+        public Task<OutOfOffice.Domain.Entities.ApprovalRequest> GetApprovalRequestByIdAsync(int id);
+        public Task Commit();
     }
 }
