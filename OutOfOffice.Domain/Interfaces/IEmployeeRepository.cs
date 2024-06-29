@@ -16,5 +16,6 @@ namespace OutOfOffice.Domain.Interfaces
         public Task<List<Employee>> GetAllEmployeesAsync(string searchPhrase, string sortOrder);
         public Task<Employee> GetEmployeeByIdAsync(int id);
         public Task Commit();
+        public Task<IEnumerable<Employee>> GetProjectManagersAsync();
     }
 }

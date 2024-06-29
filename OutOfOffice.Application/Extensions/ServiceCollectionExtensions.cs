@@ -21,6 +21,7 @@ namespace OutOfOffice.Application.Extensions
             services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddScoped<ILeaveRequestService, LeaveRequestService>();
             services.AddScoped<IApprovalRequestService, ApprovalRequestService>();
+            services.AddScoped<IProjectService, ProjectService>();
 
             // Add Fluent validation
             services.AddValidatorsFromAssemblyContaining<UserRoleDtoValidator>()

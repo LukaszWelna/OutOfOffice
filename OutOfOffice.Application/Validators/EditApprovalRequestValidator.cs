@@ -12,7 +12,7 @@ namespace OutOfOffice.Application.Validators
     {
         public EditApprovalRequestValidator()
         {
-            RuleFor(e => e.StatusId)
+            RuleFor(a => a.StatusId)
                 .NotEmpty().WithMessage("This field is required.")
                 .GreaterThan(0).WithMessage("This field is required.");
         }
