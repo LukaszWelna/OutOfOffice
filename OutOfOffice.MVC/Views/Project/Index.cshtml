@@ -1,1 +1,101 @@
-﻿<a class="link" asp-controller="Project" asp-action="Create">Create new project</a>
+﻿﻿@using Microsoft.AspNetCore.Identity
+@using OutOfOffice.Application.Project
+
+@inject UserManager<IdentityUser> UserManager
+
+@model List<GetProjectDto>
+
+@{
+    ViewData["Title"] = "Projects";
+}
+
+<div class="container col-xl-12 col-xxl-12">
+    <div class="row align-items-center">
+        <div class="col-12 table-container p-3 rounded-2 mb-4">
+            <h3 class="text-center mb-3">Employees</h3>
+            <form asp-action="Index" method="get">
+                <div>
+                    @if (User.IsInRole("Administrator") || User.IsInRole("Project Manager"))
+                    {
+                        <div class="mb-2">
+                            <a class="link" asp-controller="Project" asp-action="Create">Create new project</a>
+                        </div>
+                    }
+                    <div class="d-flex align-items-center mb-3">
+                        Find by project id:
+                        <input class="mx-1" type="number" name="SearchPhrase" value="@ViewData["CurrentSearchPhrase"]" />
+                        <button id="filterSubmit" type="submit" class="btn btn-secondary me-1">Filter</button> |
+                        <a class="link mx-1" asp-action="Index">Back to Full List</a>
+                        <input type="hidden" name="SortOrder" value="@ViewData["CurrentSortOrder"]" />
+                    </div>
+                </div>
+            </form>
+            @if (Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-borderless mb-0 table-balance">
+                        <tbody>
+                            <tr>
+                                <th>
+                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["IdSortParam"]" asp-route-searchPhrase="@ViewData["CurrentSearchPhrase"]">Id</a>
+                                </th>
+                                <th>
+                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["ProjectTypeSortParam"]" asp-route-searchPhrase="@ViewData["CurrentSearchPhrase"]">Project type</a>
+                                </th>
+                                <th>
+                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["StartDateSortParam"]" asp-route-searchPhrase="@ViewData["CurrentSearchPhrase"]">Start date</a>
+                                </th>
+                                <th>
+                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["EndDateSortParam"]" asp-route-searchPhrase="@ViewData["CurrentSearchPhrase"]">End date</a>
+                                </th>
+                                <th>
+                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["ProjectManagerSortParam"]" asp-route-searchPhrase="@ViewData["CurrentSearchPhrase"]">Project manager</a>
+                                </th>
+                                <th>
+                                    <a asp-action="Index" asp-route-sortOrder="@ViewData["StatusSortParam"]" asp-route-searchPhrase="@ViewData["CurrentSearchPhrase"]">Status</a>
+                                </th>
+                                <th>
+                                    Comment
+                                </th>
+                                <th>Edit</th>
+                            </tr>
+                            @foreach (var project in Model)
+                            {
+                                <tr class="border-bottom">
+                                    <td>
+                                        @project.Id
+                                    </td>
+                                    <td>
+                                        @project.ProjectType
+                                    </td>
+                                    <td>
+                                        @project.StartDate
+                                    </td>
+                                    <td>
+                                        @project.EndDate
+                                    </td>
+                                    <td>
+                                        @project.ProjectManagerName
+                                    </td>
+                                    <td>
+                                        @project.Status
+                                    </td>
+                                    <td>
+                                        @project.Comment
+                                    </td>
+                                    <td>
+                                        <a class="bi bi-pencil mx-1" asp-controller="Project" asp-action="Edit" asp-route-id="@project.Id"></a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <p class="text-center">No projects to show.</p>
+            }
+        </div>
+    </div>
+</div>

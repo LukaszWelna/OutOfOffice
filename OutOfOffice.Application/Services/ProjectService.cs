@@ -65,5 +65,14 @@ namespace OutOfOffice.Application.Services
 
             await _projectRepository.CreateProjectAsync(project, employeeProject);
         }
+
+        public async Task<List<GetProjectDto>> GetAllProjectsAsync(int searchPhrase, string sortOrder)
+        {
+            var projects = await _projectRepository.GetAllProjectsAsync(searchPhrase, sortOrder);
+
+            var projectDtos = _mapper.Map<List<GetProjectDto>>(projects);
+
+            return projectDtos;
+        }
     }
 }
