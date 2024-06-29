@@ -10,5 +10,6 @@ namespace OutOfOffice.Domain.Interfaces
     public interface IProjectRepository
     {
         public Task CreateProjectAsync(Project project, EmployeeProject employeeProject);
+        public Task<List<Project>> GetAllProjectsAsync(int searchPhrase, string sortOrder);
     }
 }

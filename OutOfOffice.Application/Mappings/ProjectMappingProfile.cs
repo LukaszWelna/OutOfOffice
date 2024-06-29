@@ -14,6 +14,12 @@ namespace OutOfOffice.Application.Mappings
         public ProjectMappingProfile()
         {
             CreateMap<CreateProjectDto, OutOfOffice.Domain.Entities.Project>();
+            CreateMap<OutOfOffice.Domain.Entities.Project, GetProjectDto>()
+                .ForMember(p => p.ProjectManagerName, opt => opt.MapFrom(src =>
+                src.EmployeeProjects
+                .Where(ep => ep.Employee.Position == "Project Manager")
+                .Select(ep => ep.Employee.FullName)
+                .FirstOrDefault()));
         }
     }
 }

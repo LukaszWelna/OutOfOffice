@@ -43,5 +43,61 @@ namespace OutOfOffice.Infrastructure.Repositories
                 }
             }
         }
+
+        public async Task<List<Project>> GetAllProjectsAsync(int searchPhrase, string sortOrder)
+        {
+            var projects = _dbContext.Projects
+                .Include(p => p.EmployeeProjects)
+                .ThenInclude(ep => ep.Employee)
+                .Where(p => searchPhrase == 0 || p.Id == searchPhrase);
+
+            switch (sortOrder)
+            {
+                case "IdDesc":
+                    projects = projects.OrderByDescending(p => p.Id);
+                    break;
+                case "projectTypeAsc":
+                    projects = projects.OrderBy(p => p.ProjectType);
+                    break;
+                case "projectTypeDesc":
+                    projects = projects.OrderByDescending(p => p.ProjectType);
+                    break;
+                case "startDateAsc":
+                    projects = projects.OrderBy(p => p.StartDate);
+                    break;
+                case "startDateDesc":
+                    projects = projects.OrderByDescending(p => p.StartDate);
+                    break;
+                case "endDateAsc":
+                    projects = projects.OrderBy(p => p.EndDate);
+                    break;
+                case "endDateDesc":
+                    projects = projects.OrderByDescending(p => p.EndDate);
+                    break;
+                case "projectManagerAsc":
+                    projects = projects.OrderBy(p => p.EmployeeProjects
+                        .Where(ep => ep.Employee.Position == "Project Manager")
+                        .Select(ep => ep.Employee.FullName)
+                        .FirstOrDefault());
+                    break;
+                case "projectManagerDesc":
+                    projects = projects.OrderByDescending(p => p.EmployeeProjects
+                        .Where(ep => ep.Employee.Position == "Project Manager")
+                        .Select(ep => ep.Employee.FullName)
+                        .FirstOrDefault());
+                    break;
+                case "statusAsc":
+                    projects = projects.OrderBy(p => p.Status);
+                    break;
+                case "statusDesc":
+                    projects = projects.OrderByDescending(p => p.Status);
+                    break;
+                default:
+                    projects = projects.OrderBy(p => p.Id);
+                    break;
+            }
+
+            return await projects.ToListAsync();
+        }
     }
 }

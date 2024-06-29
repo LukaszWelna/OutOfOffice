@@ -16,9 +16,19 @@ namespace OutOfOffice.MVC.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index([FromQuery] int searchPhrase, [FromQuery] string sortOrder)
         {
-            var allProjects = await _projectService.GetAllProjectsAsync();
+            ViewData["IdSortParam"] = String.IsNullOrEmpty(sortOrder) ? "IdDesc" : "";
+            ViewData["ProjectTypeSortParam"] = sortOrder == "projectTypeAsc" ? "projectTypeDesc" : "projectTypeAsc";
+            ViewData["StartDateSortParam"] = sortOrder == "startDateAsc" ? "startDateDesc" : "startDateAsc";
+            ViewData["EndDateSortParam"] = sortOrder == "endDateAsc" ? "endDateDesc" : "endDateAsc";
+            ViewData["ProjectManagerSortParam"] = sortOrder == "projectManagerAsc" ? "projectManagerDesc" : "projectManagerAsc";
+            ViewData["StatusSortParam"] = sortOrder == "statusAsc" ? "statusDesc" : "statusAsc";
+
+            ViewData["CurrentSearchPhrase"] = searchPhrase;
+            ViewData["CurrentSortOrder"] = sortOrder;
+
+            var allProjects = await _projectService.GetAllProjectsAsync(searchPhrase, sortOrder);
 
             return View(allProjects);
         }
