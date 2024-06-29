@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OutOfOffice.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using OutOfOffice.Infrastructure.Persistence;
 namespace OutOfOffice.Infrastructure.Migrations
 {
     [DbContext(typeof(OutOfOfficeDbContext))]
-    partial class OutOfOfficeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240629074540_RefactorProjectEntity")]
+    partial class RefactorProjectEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

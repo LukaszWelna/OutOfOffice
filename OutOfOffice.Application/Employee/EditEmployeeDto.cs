@@ -21,6 +21,6 @@ namespace OutOfOffice.Application.Employee
         public int OutOfOfficeBalance { get; set; }
         public byte[]? Photo { get; set; }
         public int? ProjectId { get; set; }
-        public List<Project> Projects { get; set; } = new List<Project>();
+        public List<OutOfOffice.Domain.Entities.Project> Projects { get; set; } = new List<OutOfOffice.Domain.Entities.Project>();
     }
 }

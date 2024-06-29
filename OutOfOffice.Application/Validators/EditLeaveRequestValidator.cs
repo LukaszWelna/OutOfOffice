@@ -12,12 +12,12 @@ namespace OutOfOffice.Application.Validators
     {
         public EditLeaveRequestValidator()
         {
-            RuleFor(e => e.AbsenceReasonId)
+            RuleFor(l => l.AbsenceReasonId)
                 .NotEmpty().WithMessage("This field is required.")
                 .GreaterThan(0).WithMessage("This field is required.");
 
-            RuleFor(b => b.EndDate)
-                .GreaterThanOrEqualTo(b => b.StartDate).WithMessage("End date must be equal or greater than start date.");
+            RuleFor(l => l.EndDate)
+                .GreaterThanOrEqualTo(l => l.StartDate).WithMessage("End date must be equal or greater than start date.");
         }
     }
 }

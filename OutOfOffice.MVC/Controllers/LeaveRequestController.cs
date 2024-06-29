@@ -50,7 +50,6 @@ namespace OutOfOffice.MVC.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateLeaveRequestDto createLeaveRequestDto)
         {
-            
             if (!ModelState.IsValid)
             {
                 var createLeaveRequestDtoAfterValidation = _leaveRequestService.GetLeaveRequestDtoAfterValidation(createLeaveRequestDto);

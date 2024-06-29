@@ -130,5 +130,14 @@ namespace OutOfOffice.Infrastructure.Repositories
 
         public async Task Commit()
             => await _dbContext.SaveChangesAsync();
+
+        public async Task<IEnumerable<Employee>> GetProjectManagersAsync()
+        {
+            var projectManagers = await _dbContext.Employees
+                .Where(e => e.Position == "Project Manager")
+                .ToListAsync();
+
+            return projectManagers;
+        }
     }
 }
