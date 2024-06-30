@@ -118,6 +118,7 @@ namespace OutOfOffice.Infrastructure.Repositories
         {
             var employee = await _dbContext.Employees
                 .Include(e => e.EmployeeProjects)
+                .ThenInclude(ep => ep.Project)
                 .FirstOrDefaultAsync(e => e.Id == id);
 
             if (employee == null)

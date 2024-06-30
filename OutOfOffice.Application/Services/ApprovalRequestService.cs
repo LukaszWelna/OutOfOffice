@@ -76,13 +76,22 @@ namespace OutOfOffice.Application.Services
 
             if (employee == null)
             {
-                throw new InvalidOperationException("Invalid user id.");
+                throw new InvalidOperationException("Invalid user email.");
             }
             
             approvalRequest.ApproverId = employee.Id;
             approvalRequest.Status = ApprovalRequestStatusList.ApprovalRequestStatuses.FirstOrDefault(s => s.Id == editApprovalRequestDto.StatusId)!.Name;
             approvalRequest.Comment = editApprovalRequestDto.Comment;
 
+            if (approvalRequest.Status == "Approved" && (leaveRequest.Status == "Submitted" || leaveRequest.Status == "Rejected"))
+            {
+                leaveRequest.Employee.OutOfOfficeBalance -= leaveRequest.EndDate.DayNumber - leaveRequest.StartDate.DayNumber;
+            }
+            else if (approvalRequest.Status == "Rejected" && leaveRequest.Status == "Approved")
+            {
+                leaveRequest.Employee.OutOfOfficeBalance += leaveRequest.EndDate.DayNumber - leaveRequest.StartDate.DayNumber;
+            }
+            
             leaveRequest.Status = approvalRequest.Status;
             leaveRequest.Comment = approvalRequest.Comment;
 
