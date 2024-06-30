@@ -20,6 +20,7 @@ namespace OutOfOffice.MVC.Controllers
             _approvalRequestService = approvalRequestService;
         }
 
+        // Show leave requests
         [HttpGet]
         public async Task<IActionResult> Index([FromQuery] string searchPhrase, [FromQuery] string sortOrder)
         {
@@ -38,6 +39,7 @@ namespace OutOfOffice.MVC.Controllers
             return View(allLeaveRequests);
         }
 
+        // Manage creating new leave request
         [Authorize(Roles = "Employee")]
         [HttpGet]
         public IActionResult Create()
@@ -65,6 +67,7 @@ namespace OutOfOffice.MVC.Controllers
             return RedirectToAction(nameof(Create));
         }
 
+        // Manage editing a leave request
         [Authorize(Roles = "Employee, Administrator")]
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
@@ -92,6 +95,7 @@ namespace OutOfOffice.MVC.Controllers
             return RedirectToAction("Index", "LeaveRequest");
         }
 
+        // Submit leave request
         [Authorize(Roles = "Employee, Administrator")]
         [HttpPost]
         public async Task<IActionResult> Submit(int id)
@@ -105,6 +109,7 @@ namespace OutOfOffice.MVC.Controllers
             return RedirectToAction("Index", "LeaveRequest");
         }
 
+        // Cancel submitting of leave request
         [Authorize(Roles = "Employee, Administrator")]
         [HttpPost]
         public async Task<IActionResult> Cancel(int id)

@@ -16,6 +16,7 @@ namespace OutOfOffice.MVC.Controllers
             _approvalRequestService = approvalRequestService;
         }
 
+        // Show approval requests
         [Authorize(Roles = "HR Manager, Project Manager, Administrator")]
         [HttpGet]
         public async Task<IActionResult> Index([FromQuery] int searchPhrase, [FromQuery] string sortOrder)
@@ -32,6 +33,7 @@ namespace OutOfOffice.MVC.Controllers
             return View(approvalRequests);
         }
 
+        // Manage editing approval requests
         [Authorize(Roles = "HR Manager, Project Manager")]
         [HttpGet]
         public async Task<IActionResult> Edit(int id)

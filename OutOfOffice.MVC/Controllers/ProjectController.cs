@@ -16,6 +16,7 @@ namespace OutOfOffice.MVC.Controllers
             _projectService = projectService;
         }
 
+        // Show all projects
         [HttpGet]
         public async Task<IActionResult> Index([FromQuery] int searchPhrase, [FromQuery] string sortOrder)
         {
@@ -34,6 +35,7 @@ namespace OutOfOffice.MVC.Controllers
             return View(allProjects);
         }
 
+        // Manage creating a new project
         [Authorize(Roles = "Project Manager, Administrator")]
         [HttpGet]
         public async Task<IActionResult> Create()
@@ -61,6 +63,7 @@ namespace OutOfOffice.MVC.Controllers
             return RedirectToAction(nameof(Create));
         }
 
+        // Manage editing of project
         [Authorize(Roles = "Project Manager, Administrator")]
         [HttpGet]
         public async Task<IActionResult> Edit(int id)

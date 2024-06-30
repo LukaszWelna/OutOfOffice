@@ -17,6 +17,7 @@ namespace OutOfOffice.MVC.Controllers
             _userRoleService = userRoleService;
         }
 
+        // Show all employees
         [Authorize(Roles = "HR Manager, Project Manager, Administrator")]
         [HttpGet]
         public async Task<IActionResult> Index([FromQuery]string searchPhrase, [FromQuery]string sortOrder)
@@ -38,6 +39,7 @@ namespace OutOfOffice.MVC.Controllers
             return View(allEmployees);
         }
 
+        // Manage creating of the employee
         [Authorize(Roles = "HR Manager, Administrator")]
         [HttpGet]
         public async Task<IActionResult> Create()
@@ -65,6 +67,7 @@ namespace OutOfOffice.MVC.Controllers
             return RedirectToAction(nameof(Create));
         }
 
+        // Manage editing of the employee
         [Authorize(Roles = "HR Manager, Project Manager, Administrator")]
         [HttpGet]
         public async Task<IActionResult> Edit(int id)

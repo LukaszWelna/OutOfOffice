@@ -6,6 +6,7 @@ using OutOfOffice.MVC.Extensions;
 
 namespace OutOfOffice.MVC.Controllers
 {
+    // Manage roles in the app
     [Authorize(Roles = "Administrator")]
     public class RoleController : Controller
     {
