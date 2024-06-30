@@ -78,14 +78,17 @@ namespace OutOfOffice.Application.Services
             var loggedUserEmail = _userContextService.GetCurrentUser().Email;
             var loggedEmployee = await _employeeRepository.GetEmployeeByEmailAsync(loggedUserEmail);
 
-            if (loggedEmployee == null)
+            if (loggedUserEmail != "admin@admin.com")
             {
-                throw new InvalidOperationException("Invalid user id.");
-            }
+                if (loggedEmployee == null)
+                {
+                    throw new InvalidOperationException("Invalid user id.");
+                }
 
-            if (loggedEmployee.Position == "Employee")
-            {
-                projects = projects.Where(p => p.EmployeeProjects.Any(ep => ep.EmployeeId == loggedEmployee.Id)).ToList();
+                if (loggedEmployee.Position == "Employee")
+                {
+                    projects = projects.Where(p => p.EmployeeProjects.Any(ep => ep.EmployeeId == loggedEmployee.Id)).ToList();
+                }
             }
 
             var projectDtos = _mapper.Map<List<GetProjectDto>>(projects);
