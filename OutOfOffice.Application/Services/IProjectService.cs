@@ -14,5 +14,9 @@ namespace OutOfOffice.Application.Services
         public Task<CreateProjectDto> GetCreateProjectDtoAfterValidation(CreateProjectDto createProjectDto);
         public Task CreateProjectAsync(CreateProjectDto createProjectDto);
         public Task<List<GetProjectDto>> GetAllProjectsAsync(int searchPhrase, string sortOrder);
+        public Task<EditProjectDto> GetEditProjectDtoByIdAsync(int id);
+        public Task<EditProjectDto> GetEditProjectDtoAfterValidation(EditProjectDto editProjectDto);
+        public Task EditProjectById(EditProjectDto editProjectDto);
+
     }
 }

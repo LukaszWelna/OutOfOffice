@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OutOfOffice.Application.LeaveRequest;
 using OutOfOffice.Application.Project;
 using OutOfOffice.Application.Services;
@@ -15,6 +16,7 @@ namespace OutOfOffice.MVC.Controllers
             _projectService = projectService;
         }
 
+        [Authorize(Roles = "HR Manager, Project Manager, Administrator")]
         [HttpGet]
         public async Task<IActionResult> Index([FromQuery] int searchPhrase, [FromQuery] string sortOrder)
         {
@@ -33,6 +35,7 @@ namespace OutOfOffice.MVC.Controllers
             return View(allProjects);
         }
 
+        [Authorize(Roles = "Project Manager, Administrator")]
         [HttpGet]
         public async Task<IActionResult> Create()
         {
@@ -41,6 +44,7 @@ namespace OutOfOffice.MVC.Controllers
             return View(createProjectDto);
         }
 
+        [Authorize(Roles = "Project Manager, Administrator")]
         [HttpPost]
         public async Task<IActionResult> Create(CreateProjectDto createProjectDto)
         {
@@ -56,6 +60,33 @@ namespace OutOfOffice.MVC.Controllers
             this.SetNotification("success", "Project added successfully");
             
             return RedirectToAction(nameof(Create));
+        }
+
+        [Authorize(Roles = "Project Manager, Administrator")]
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var editProjectDto = await _projectService.GetEditProjectDtoByIdAsync(id);
+
+            return View(editProjectDto);
+        }
+
+        [Authorize(Roles = "Project Manager, Administrator")]
+        [HttpPost]
+        public async Task<IActionResult> Edit(EditProjectDto editProjectDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                var editProjectDtoAfterValidation = await _projectService.GetEditProjectDtoAfterValidation(editProjectDto);
+
+                return View(editProjectDtoAfterValidation);
+            }
+
+            await _projectService.EditProjectById(editProjectDto);
+
+            this.SetNotification("success", "Project edited successfully");
+
+            return RedirectToAction("Index", "Project");
         }
     }
 }

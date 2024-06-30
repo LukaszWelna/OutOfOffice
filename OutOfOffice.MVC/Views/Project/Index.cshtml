@@ -84,7 +84,10 @@
                                         @project.Comment
                                     </td>
                                     <td>
-                                        <a class="bi bi-pencil mx-1" asp-controller="Project" asp-action="Edit" asp-route-id="@project.Id"></a>
+                                        @if (User.IsInRole("Administrator") || User.IsInRole("Project Manager"))
+                                        {
+                                            <a class="bi bi-pencil mx-1" asp-controller="Project" asp-action="Edit" asp-route-id="@project.Id"></a>
+                                        }
                                     </td>
                                 </tr>
                             }
