@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using OutOfOffice.Application.ApplicationUser;
 using OutOfOffice.Application.Employee;
+using OutOfOffice.Application.Project;
 using OutOfOffice.Domain.Entities;
 using OutOfOffice.Domain.Interfaces;
 using System;
@@ -13,11 +15,18 @@ namespace OutOfOffice.Application.Services
     public class EmployeeService : IEmployeeService
     {
         private readonly IEmployeeRepository _employeeRepository;
+        private readonly IProjectRepository _projectRepository;
+        private readonly IUserContextService _userContextService;
         private readonly IMapper _mapper;
 
-        public EmployeeService(IEmployeeRepository employeeRepository, IMapper mapper)
+        public EmployeeService(IEmployeeRepository employeeRepository,
+            IProjectRepository projectRepository,
+            IUserContextService userContextService,
+            IMapper mapper)
         {
             _employeeRepository = employeeRepository;
+            _projectRepository = projectRepository;
+            _userContextService = userContextService;
             _mapper = mapper;
         }
 
@@ -55,11 +64,6 @@ namespace OutOfOffice.Application.Services
             await _employeeRepository.CreateEmployeeAsync(employee);
         }
 
-        public Task CreateEmployeeProjectAsync(int projectId)
-        {
-            throw new NotImplementedException();
-        }
-
         public Task<OutOfOffice.Domain.Entities.Employee?> GetEmployeeByEmailAsync(string email)
         {
             var employee = _employeeRepository.GetEmployeeByEmailAsync(email);
@@ -84,9 +88,38 @@ namespace OutOfOffice.Application.Services
 
             var peoplePartners = await _employeeRepository.GetPeoplePartnersAsync();
 
+            var loggedUser = _userContextService.GetCurrentUser();
+
+            var employeeLogged = await _employeeRepository.GetEmployeeByEmailAsync(loggedUser.Email);
+
+            if (employeeLogged == null)
+            {
+                throw new InvalidOperationException("Invalid user email.");
+            }
+
+            var projects = new List<OutOfOffice.Domain.Entities.Project>();
+
+            if (employeeLogged.Position == "Project Manager")
+            {
+                projects = await _projectRepository.GetProjectManagerProjects(employeeLogged.Id);
+            }
+
+            var employeeProject = employee.EmployeeProjects
+                .FirstOrDefault(ep => ep.EmployeeId == employee.Id);
+
+            if (employeeProject != null)
+            {
+                editEmployeeDto.ProjectId = employeeProject.ProjectId;
+            }
+            else
+            {
+                editEmployeeDto.ProjectId = 0;
+            }
+
             editEmployeeDto.Subdivisions = SubdivisionList.Subdivisions;
             editEmployeeDto.Positions = PositionList.Positions;
             editEmployeeDto.PeoplePartners = peoplePartners.ToList();
+            editEmployeeDto.Projects = projects;
 
             return editEmployeeDto;
         }
@@ -102,6 +135,34 @@ namespace OutOfOffice.Application.Services
             employee.PeoplePartnerId = editEmployeeDto.PeoplePartnerId != 0 ? editEmployeeDto.PeoplePartnerId : null;
             employee.OutOfOfficeBalance = editEmployeeDto.OutOfOfficeBalance;
             employee.Photo = editEmployeeDto.Photo;
+
+            var employeeProject = employee.EmployeeProjects
+                .FirstOrDefault(ep => ep.EmployeeId == employee.Id);
+
+            if (employeeProject != null)
+            {
+                if (editEmployeeDto.ProjectId != 0)
+                {
+                    employeeProject.ProjectId = editEmployeeDto.ProjectId!.Value;
+                }
+                else
+                {
+                    await _projectRepository.DeleteEmployeeProjectById(employeeProject.Id);
+                }
+            }
+            else
+            {
+                if (editEmployeeDto.ProjectId != 0)
+                {
+                    var newEmployeeProject = new EmployeeProject()
+                    {
+                        EmployeeId = employee.Id,
+                        ProjectId = editEmployeeDto.ProjectId!.Value
+                    };
+
+                    await _projectRepository.CreateEmployeeProjectAsync(newEmployeeProject);
+                }
+            }
 
             await _employeeRepository.Commit();
         }

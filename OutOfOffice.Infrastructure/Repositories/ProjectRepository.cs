@@ -117,5 +117,37 @@ namespace OutOfOffice.Infrastructure.Repositories
 
         public async Task Commit()
             => await _dbContext.SaveChangesAsync();
+
+        public async Task<List<Project>> GetProjectManagerProjects(int id)
+        {
+           var projects = await _dbContext.Projects
+                .Include(p => p.EmployeeProjects)
+                .Where(p => p.EmployeeProjects.Any(ep => ep.EmployeeId == id))
+                .ToListAsync();
+
+            return projects;
+        }
+
+        public async Task DeleteEmployeeProjectById(int id)
+        {
+            var employeeProject = await _dbContext.EmployeeProjects
+                .FirstOrDefaultAsync(ep => ep.Id == id);
+
+            if (employeeProject == null)
+            {
+                throw new InvalidOperationException("Employee project with specified id doesn't exist.");
+            }
+
+            _dbContext.EmployeeProjects.Remove(employeeProject);
+
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task CreateEmployeeProjectAsync(EmployeeProject employeeProject)
+        {
+            _dbContext.Add(employeeProject);
+
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }

@@ -14,7 +14,9 @@ namespace OutOfOffice.Application.Mappings
         {
             CreateMap<CreateEmployeeDto, OutOfOffice.Domain.Entities.Employee>();
             CreateMap<OutOfOffice.Domain.Entities.Employee, GetEmployeeDto>()
-                .ForMember(e => e.PeoplePartner, opt => opt.MapFrom(src => src.PeoplePartner != null ? src.PeoplePartner.FullName : null));
+                .ForMember(e => e.PeoplePartner, opt => opt.MapFrom(src => src.PeoplePartner != null ? src.PeoplePartner.FullName : null))
+                .ForMember(e => e.ProjectType, opt => opt.MapFrom(src =>
+                src.EmployeeProjects.FirstOrDefault(ep => ep.EmployeeId == src.Id)!.Project.ProjectType));
             CreateMap<OutOfOffice.Domain.Entities.Employee, EditEmployeeDto>()
                 .ForMember(e => e.SubdivisionId, opt => opt.MapFrom(src =>
                 SubdivisionList.Subdivisions.FirstOrDefault(s => s.Name == src.Subdivision)!.Id))

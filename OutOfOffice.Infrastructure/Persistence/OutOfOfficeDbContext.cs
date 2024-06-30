@@ -18,6 +18,7 @@ namespace OutOfOffice.Infrastructure.Persistence
         public DbSet<LeaveRequest> LeaveRequests { get; set; }
         public DbSet<ApprovalRequest> ApprovalRequests { get; set; }
         public DbSet<Project> Projects { get; set; }
+        public DbSet<EmployeeProject> EmployeeProjects { get; set; }
 
         public OutOfOfficeDbContext(DbContextOptions<OutOfOfficeDbContext> options) : base(options)
         {
@@ -120,6 +121,11 @@ namespace OutOfOffice.Infrastructure.Persistence
 
                 eb.Property(p => p.Comment)
                 .HasColumnType("varchar(100)");
+            });
+
+            modelBuilder.Entity<EmployeeProject>(eb =>
+            {
+                eb.HasKey(e => e.Id);
             });
         }
     }

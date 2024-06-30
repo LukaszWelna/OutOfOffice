@@ -78,6 +78,7 @@ namespace OutOfOffice.Infrastructure.Repositories
         public async Task<LeaveRequest> GetLeaveRequestByIdAsync(int id)
         {
             var leaveRequest = await _dbContext.LeaveRequests
+                .Include(l => l.Employee)
                 .FirstOrDefaultAsync(l => l.Id == id);
 
             if (leaveRequest == null)

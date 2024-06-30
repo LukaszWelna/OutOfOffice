@@ -15,7 +15,9 @@ namespace OutOfOffice.Application.Mappings
             CreateMap<OutOfOffice.Domain.Entities.ApprovalRequest, GetApprovalRequestDto>()
                 .ForMember(ar => ar.ApproverName, opt => opt.MapFrom(src => src.Approver != null ? src.Approver.FullName : ""));
             CreateMap<OutOfOffice.Domain.Entities.ApprovalRequest, EditApprovalRequestDto>()
-                .ForMember(ar => ar.Statuses, opt => opt.MapFrom(src => ApprovalRequestStatusList.ApprovalRequestStatuses));
+                .ForMember(ar => ar.Statuses, opt => opt.MapFrom(src => ApprovalRequestStatusList.ApprovalRequestStatuses))
+                .ForMember(ar => ar.StatusId, opt => opt.MapFrom(src =>
+                ApprovalRequestStatusList.ApprovalRequestStatuses.FirstOrDefault(a => a.Name == src.Status)!.Id));
         }
     }
 }
