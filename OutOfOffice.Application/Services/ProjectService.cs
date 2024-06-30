@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using OutOfOffice.Application.LeaveRequest;
 using OutOfOffice.Application.Project;
 using OutOfOffice.Domain.Entities;
 using OutOfOffice.Domain.Interfaces;
@@ -73,6 +74,54 @@ namespace OutOfOffice.Application.Services
             var projectDtos = _mapper.Map<List<GetProjectDto>>(projects);
 
             return projectDtos;
+        }
+
+        public async Task<EditProjectDto> GetEditProjectDtoByIdAsync(int id)
+        {
+            var project = await _projectRepository.GetProjectByIdAsync(id);
+            var projectManagers = await _employeeRepository.GetProjectManagersAsync();
+
+            var projectDto = _mapper.Map<EditProjectDto>(project);
+
+            projectDto.ProjectTypes = ProjectTypeList.ProjectTypes;
+            projectDto.ProjectStatuses = ProjectStatusList.ProjectStatuses;
+            projectDto.ProjectManagers = projectManagers.ToList();
+
+            return projectDto;
+        }
+
+        public async Task<EditProjectDto> GetEditProjectDtoAfterValidation(EditProjectDto editProjectDto)
+        {
+            var projectManagers = await _employeeRepository.GetProjectManagersAsync();
+
+            editProjectDto.ProjectTypes = ProjectTypeList.ProjectTypes;
+            editProjectDto.ProjectStatuses = ProjectStatusList.ProjectStatuses;
+            editProjectDto.ProjectManagers = projectManagers.ToList();
+
+            return editProjectDto;
+        }
+
+        public async Task EditProjectById(EditProjectDto editProjectDto)
+        {
+            var project = await _projectRepository.GetProjectByIdAsync(editProjectDto.Id);
+
+            project.ProjectType = ProjectTypeList.ProjectTypes.FirstOrDefault(pt => pt.Id == editProjectDto.ProjectTypeId)?.Name ?? "";
+            project.Status = ProjectStatusList.ProjectStatuses.FirstOrDefault(ps => ps.Id == editProjectDto.StatusId)?.Name ?? "";
+            project.StartDate = editProjectDto.StartDate;
+            project.EndDate = editProjectDto.EndDate;
+            project.Comment = editProjectDto.Comment;
+
+            var employeeProject = project.EmployeeProjects
+                .FirstOrDefault(ep => ep.ProjectId == project.Id && ep.Employee.Position == "Project Manager");
+
+            if (employeeProject == null)
+            {
+                throw new InvalidOperationException("EmployeeProject with specified id and project manager doesn't exist.");
+            }
+
+            employeeProject.EmployeeId = editProjectDto.ProjectManagerId;
+
+            await _projectRepository.Commit();
         }
     }
 }

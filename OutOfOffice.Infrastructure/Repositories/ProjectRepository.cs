@@ -99,5 +99,23 @@ namespace OutOfOffice.Infrastructure.Repositories
 
             return await projects.ToListAsync();
         }
+
+        public async Task<Project> GetProjectByIdAsync(int id)
+        {
+            var project = await _dbContext.Projects
+                .Include(p => p.EmployeeProjects)
+                .ThenInclude(ep => ep.Employee)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (project == null)
+            {
+                throw new InvalidOperationException("Project with specified id doesn't exist.");
+            }
+
+            return project;
+        }
+
+        public async Task Commit()
+            => await _dbContext.SaveChangesAsync();
     }
 }
