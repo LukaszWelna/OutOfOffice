@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using OutOfOffice.Application.ApplicationUser;
 using OutOfOffice.Application.LeaveRequest;
 using OutOfOffice.Application.Project;
 using OutOfOffice.Domain.Entities;
@@ -15,14 +16,17 @@ namespace OutOfOffice.Application.Services
     {
         private readonly IProjectRepository _projectRepository;
         private readonly IEmployeeRepository _employeeRepository;
+        private readonly IUserContextService _userContextService;
         private readonly IMapper _mapper;
 
         public ProjectService(IProjectRepository projectRepository, 
             IEmployeeRepository employeeRepository,
+            IUserContextService userContextService,
             IMapper mapper)
         {
             _projectRepository = projectRepository;
             _employeeRepository = employeeRepository;
+            _userContextService = userContextService;
             _mapper = mapper;
         }
 
@@ -70,6 +74,19 @@ namespace OutOfOffice.Application.Services
         public async Task<List<GetProjectDto>> GetAllProjectsAsync(int searchPhrase, string sortOrder)
         {
             var projects = await _projectRepository.GetAllProjectsAsync(searchPhrase, sortOrder);
+
+            var loggedUserEmail = _userContextService.GetCurrentUser().Email;
+            var loggedEmployee = await _employeeRepository.GetEmployeeByEmailAsync(loggedUserEmail);
+
+            if (loggedEmployee == null)
+            {
+                throw new InvalidOperationException("Invalid user id.");
+            }
+
+            if (loggedEmployee.Position == "Employee")
+            {
+                projects = projects.Where(p => p.EmployeeProjects.Any(ep => ep.EmployeeId == loggedEmployee.Id)).ToList();
+            }
 
             var projectDtos = _mapper.Map<List<GetProjectDto>>(projects);
 

@@ -38,6 +38,7 @@ namespace OutOfOffice.MVC.Controllers
             return View(allLeaveRequests);
         }
 
+        [Authorize(Roles = "Employee")]
         [HttpGet]
         public IActionResult Create()
         {
@@ -46,7 +47,7 @@ namespace OutOfOffice.MVC.Controllers
             return View(createLeaveRequestDto);
         }
 
-        [Authorize(Roles = "Employee, HR Manager, Project Manager")]
+        [Authorize(Roles = "Employee")]
         [HttpPost]
         public async Task<IActionResult> Create(CreateLeaveRequestDto createLeaveRequestDto)
         {
@@ -64,6 +65,7 @@ namespace OutOfOffice.MVC.Controllers
             return RedirectToAction(nameof(Create));
         }
 
+        [Authorize(Roles = "Employee, Administrator")]
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
@@ -72,6 +74,7 @@ namespace OutOfOffice.MVC.Controllers
             return View(editLeaveRequestDto);
         }
 
+        [Authorize(Roles = "Employee, Administrator")]
         [HttpPost]
         public async Task<IActionResult> Edit(EditLeaveRequestDto editLeaveRequestDto)
         {
@@ -89,6 +92,7 @@ namespace OutOfOffice.MVC.Controllers
             return RedirectToAction("Index", "LeaveRequest");
         }
 
+        [Authorize(Roles = "Employee, Administrator")]
         [HttpPost]
         public async Task<IActionResult> Submit(int id)
         {
@@ -100,7 +104,8 @@ namespace OutOfOffice.MVC.Controllers
 
             return RedirectToAction("Index", "LeaveRequest");
         }
-        
+
+        [Authorize(Roles = "Employee, Administrator")]
         [HttpPost]
         public async Task<IActionResult> Cancel(int id)
         {

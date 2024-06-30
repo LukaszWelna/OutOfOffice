@@ -90,8 +90,8 @@ namespace OutOfOffice.Infrastructure.Persistence
             modelBuilder.Entity<ApprovalRequest>(eb =>
             {
                 eb.HasOne(a => a.Approver)
-                .WithOne(e => e.ApprovalRequest)
-                .HasForeignKey<ApprovalRequest>(a => a.ApproverId)
+                .WithMany(e => e.ApprovalRequests)
+                .HasForeignKey(a => a.ApproverId)
                 .OnDelete(DeleteBehavior.NoAction);
 
                 eb.HasOne(a => a.LeaveRequest)

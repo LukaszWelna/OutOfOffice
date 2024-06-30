@@ -50,7 +50,7 @@
                         <select asp-for="PeoplePartnerId" asp-items="@(new SelectList(Model.PeoplePartners,
                         nameof(Employee.Id),
                         nameof(Employee.FullName)))"
-                        class="form-select form-select-md">
+                                class="form-select form-select-md">
                             <option value="0">Please select one</option>
                         </select>
                         <label asp-for="PeoplePartnerId">People partner</label>
@@ -66,7 +66,7 @@
                     <input type="hidden" asp-for="PeoplePartnerId" />
                     <input type="hidden" asp-for="OutOfOfficeBalance" />
                 }
-                @if(User.IsInRole("Administrator") || User.IsInRole("Project Manager"))
+                @if(User.IsInRole("Project Manager"))
                 {
                     <div class="form-floating mb-3">
                         <select asp-for="ProjectId" asp-items="@(new SelectList(Model.Projects,

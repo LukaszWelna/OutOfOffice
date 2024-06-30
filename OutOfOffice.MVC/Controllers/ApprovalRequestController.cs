@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OutOfOffice.Application.ApprovalRequest;
 using OutOfOffice.Application.LeaveRequest;
 using OutOfOffice.Application.Services;
@@ -15,6 +16,7 @@ namespace OutOfOffice.MVC.Controllers
             _approvalRequestService = approvalRequestService;
         }
 
+        [Authorize(Roles = "HR Manager, Project Manager, Administrator")]
         [HttpGet]
         public async Task<IActionResult> Index([FromQuery] int searchPhrase, [FromQuery] string sortOrder)
         {
@@ -30,6 +32,7 @@ namespace OutOfOffice.MVC.Controllers
             return View(approvalRequests);
         }
 
+        [Authorize(Roles = "HR Manager, Project Manager")]
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
@@ -38,6 +41,7 @@ namespace OutOfOffice.MVC.Controllers
             return View(editApprovalRequestDto);
         }
 
+        [Authorize(Roles = "HR Manager, Project Manager")]
         [HttpPost]
         public async Task<IActionResult> Edit(EditApprovalRequestDto editApprovalRequestDto)
         {
