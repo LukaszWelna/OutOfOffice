@@ -61,7 +61,10 @@
                                         @approvalRequest.Status
                                     </td>
                                     <td>
-                                        <a class="bi bi-pencil mx-1" asp-controller="ApprovalRequest" asp-action="Edit" asp-route-id="@approvalRequest.Id"></a>
+                                        @if (User.IsInRole("HR Manager") || User.IsInRole("Project Manager"))
+                                        {
+                                            <a class="bi bi-pencil mx-1" asp-controller="ApprovalRequest" asp-action="Edit" asp-route-id="@approvalRequest.Id"></a>
+                                        }
                                     </td>  
                                 </tr>
                             }

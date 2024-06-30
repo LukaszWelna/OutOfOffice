@@ -55,9 +55,10 @@ namespace OutOfOffice.Infrastructure.Repositories
         public async Task<List<Employee>> GetAllEmployeesAsync(string searchPhrase, string sortOrder)
         {
             var employees = _dbContext.Employees
+                .Include(e => e.PeoplePartner)
                 .Include(e => e.EmployeeProjects)
                 .ThenInclude(p => p.Project)
-                .Where(e => searchPhrase == null || e.FullName.ToLower().Contains(searchPhrase.ToLower()));
+                .Where(e => e.Position == "Employee" && (searchPhrase == null || e.FullName.ToLower().Contains(searchPhrase.ToLower())));
 
             switch (sortOrder)
             {

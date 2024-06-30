@@ -90,18 +90,21 @@ namespace OutOfOffice.Application.Services
 
             var loggedUser = _userContextService.GetCurrentUser();
 
-            var employeeLogged = await _employeeRepository.GetEmployeeByEmailAsync(loggedUser.Email);
-
-            if (employeeLogged == null)
-            {
-                throw new InvalidOperationException("Invalid user email.");
-            }
-
             var projects = new List<OutOfOffice.Domain.Entities.Project>();
 
-            if (employeeLogged.Position == "Project Manager")
+            if (loggedUser.Email != "admin@admin.com")
             {
-                projects = await _projectRepository.GetProjectManagerProjects(employeeLogged.Id);
+                var employeeLogged = await _employeeRepository.GetEmployeeByEmailAsync(loggedUser.Email);
+
+                if (employeeLogged == null)
+                {
+                    throw new InvalidOperationException("Invalid user email.");
+                }
+
+                if (employeeLogged.Position == "Project Manager")
+                {
+                    projects = await _projectRepository.GetProjectManagerProjects(employeeLogged.Id);
+                }
             }
 
             var employeeProject = employee.EmployeeProjects

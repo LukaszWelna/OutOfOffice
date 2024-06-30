@@ -18,7 +18,7 @@ namespace OutOfOffice.Domain.Entities
         public Employee? PeoplePartner { get; set; }
         public int OutOfOfficeBalance { get; set; }
         public byte[]? Photo { get; set; }
-        public ApprovalRequest ApprovalRequest { get; set; } = default!;
+        public List<ApprovalRequest> ApprovalRequests { get; set; } = default!;
         public List<LeaveRequest> LeaveRequests { get; set; } = new List<LeaveRequest>();
         public List<EmployeeProject> EmployeeProjects { get; set; } = new List<EmployeeProject>();
     }

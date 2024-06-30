@@ -13,7 +13,7 @@ namespace OutOfOffice.Application.Employee
         public string Email { get; set; } = default!;
         public string Subdivision { get; set; } = default!;
         public string Position { get; set; } = default!;
-        public bool Status { get; set; }
+        public string Status { get; set; } = default!;
         public string? PeoplePartner { get; set; }
         public int OutOfOfficeBalance { get; set; }
         public string? ProjectType { get; set; }

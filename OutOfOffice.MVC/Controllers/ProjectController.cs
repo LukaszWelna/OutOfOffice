@@ -16,7 +16,6 @@ namespace OutOfOffice.MVC.Controllers
             _projectService = projectService;
         }
 
-        [Authorize(Roles = "HR Manager, Project Manager, Administrator")]
         [HttpGet]
         public async Task<IActionResult> Index([FromQuery] int searchPhrase, [FromQuery] string sortOrder)
         {

@@ -55,10 +55,14 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark @(currentController == "ApprovalRequest" && currentAction == "Index" ? "active" : "")" asp-area="" asp-controller="ApprovalRequest" asp-action="Index">Approval requests</a>
                             </li>
+                        }
+                        @if (User.IsInRole("Employee") || User.IsInRole("HR Manager") || User.IsInRole("Project Manager") || User.IsInRole("Administrator"))
+                        {
                             <li class="nav-item">
                                 <a class="nav-link text-dark @(currentController == "Project" && currentAction == "Index" ? "active" : "")" asp-area="" asp-controller="Project" asp-action="Index">Projects</a>
                             </li>
                         }
+
                         @if (User.IsInRole("Administrator"))
                         {
                             <li class="nav-item">

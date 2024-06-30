@@ -64,6 +64,15 @@ namespace OutOfOffice.Infrastructure.Repositories
                     && searchPhrase == 0 || a.LeaveRequestId == searchPhrase);
             }
 
+            if (loggedUser.Role == "Project Manager")
+            {
+                approvalRequests = approvalRequests.Where(a => 
+                a.LeaveRequest.Employee.EmployeeProjects
+                    .Any(ep => ep.Project.EmployeeProjects
+                        .Any(epp => epp.Employee.Email == loggedUser.Email && epp.Employee.Position == "Project Manager"))
+                            && searchPhrase == 0 || a.LeaveRequestId == searchPhrase);
+            }
+
             switch (sortOrder)
             {
                 case "leaveRequestIdDesc":

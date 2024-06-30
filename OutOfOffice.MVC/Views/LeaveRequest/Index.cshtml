@@ -15,7 +15,7 @@
             <h3 class="text-center mb-3">Leave requests</h3>
             <form asp-action="Index" method="get">
                 <div>
-                    @if (User.IsInRole("Employee") || User.IsInRole("HR Manager") || User.IsInRole("Project Manager"))
+                    @if (User.IsInRole("Employee"))
                     {
                         <div class="mb-2">
                             <a class="link mb-3" asp-controller="LeaveRequest" asp-action="Create">Create leave request</a>
